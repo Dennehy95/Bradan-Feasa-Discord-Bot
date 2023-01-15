@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "acebase": "^1.27.0",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3"
   },
@@ -7,7 +8,6 @@
   "description": "Discord Bot",
   "version": "1.0.0",
   "main": "app.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -5,6 +5,16 @@ import { pathToFileURL } from 'url';
 import dotenv from 'dotenv'
 dotenv.config()
 
+/* AceBase Database Open */
+import { AceBase } from 'acebase';
+const options = { logLevel: 'log', storage: { path: '.' } }; // optional settings
+const database = new AceBase('BradanFeasaAceBaseDatabase', options);  // Creates or opens a database with name "mydb"
+
+await database.ready(() => {
+    console.log('ACEBASE good to go')
+})
+
+
 import { Client, Collection, Events, GatewayIntentBits } from "discord.js"
 const client = new Client({
     intents: [GatewayIntentBits.Guilds]
