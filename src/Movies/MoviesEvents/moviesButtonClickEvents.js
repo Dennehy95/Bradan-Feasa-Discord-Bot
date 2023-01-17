@@ -60,7 +60,7 @@ module.exports = {
     )
     const selectedGenreValue = selectedGenre !== 'All Genres' ? selectedGenre : ''
     if (selectedGenreValue) {
-      genreInput.setValue(selectedGenreValue)
+      genreInput.components[0].setValue(selectedGenreValue)
     }
 
     modal.addComponents([
@@ -153,7 +153,7 @@ module.exports = {
           .setPlaceholder('Movie Description')
           .setRequired(false),
       )
-    if (description) descriptionInput.setValue(description)
+    if (description) descriptionInput.components[0].setValue(description)
 
     const imageURLInput =
       new ActionRowBuilder().addComponents(
@@ -166,7 +166,7 @@ module.exports = {
           .setPlaceholder('Image URL')
           .setRequired(false)
       )
-    if (imageURL) movieURLInput.setValue(imageURL)
+    if (imageURL) imageURLInput.components[0].setValue(imageURL)
 
     const movieURLInput =
       new ActionRowBuilder().addComponents(
@@ -179,7 +179,7 @@ module.exports = {
           .setPlaceholder('URL')
           .setRequired(false)
       )
-    if (movieURL) movieURLInput.setValue(movieURL)
+    if (movieURL) movieURLInput.components[0].setValue(movieURL)
 
     modal.addComponents([
       descriptionInput,
