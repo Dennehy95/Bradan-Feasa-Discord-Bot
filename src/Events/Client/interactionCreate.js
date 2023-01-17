@@ -1,12 +1,18 @@
 const { Events } = require('discord.js');
-const { addMovieButtonClicked, getRandomMovieButtonClicked, getSpecificMovieButtonClicked } = require('../../Movies/MoviesEvents/moviesButtonClickEvents')
-const { addMovieModalSubmit } = require('../../Movies/MoviesEvents/moviesModalSubmitEvent.js')
+const {
+  addMovieButtonClicked,
+  editMovieButtonClicked,
+  getRandomMovieButtonClicked,
+  getSpecificMovieButtonClicked,
+  toggleMovieWatchedButtonClicked
+} = require('../../Movies/MoviesEvents/moviesButtonClickEvents')
+const { addMovieModalSubmit, editMovieModalSubmit } = require('../../Movies/MoviesEvents/moviesModalSubmitEvent.js')
 const { genreSelectMenuClicked } = require('../../Movies/MoviesEvents/moviesStringSelectMenuEvent.js')
 const { getMoviesOverviewPage } = require('../../Movies/moviesOverviewPage.js');
 
 module.exports = {
   name: Events.InteractionCreate,
-  async execute (interaction, database) {
+  async execute (interaction) {
     if (interaction.isButton()) {
       return buttonClickedEvent(interaction)
     }
@@ -27,7 +33,7 @@ module.exports = {
     }
 
     try {
-      await command.execute(interaction, database);
+      await command.execute(interaction);
     } catch (error) {
       console.error(`Error executing ${interaction.commandName}`);
       console.error(error);
@@ -41,14 +47,16 @@ const buttonClickedEvent = async (interaction) => {
     // https://discordjs.guide/interactions/modals.html#the-interactioncreate-event
     return addMovieButtonClicked({ interaction, selectedGenre })
   }
+  if (interaction.customId.startsWith('EditMovieButton')) {
+    const selectedMovieName = interaction.customId.split('_')[1]
+    return editMovieButtonClicked({ interaction, selectedMovieName })
+  }
   if (interaction.customId.startsWith('GetRandomMovie')) {
     const selectedGenre = interaction.customId.split('_')[1]
-    // https://discordjs.guide/interactions/modals.html#the-interactioncreate-event
     return getRandomMovieButtonClicked({ interaction, selectedGenre })
   }
   if (interaction.customId.startsWith('GetSpecificMovie')) {
     const movieName = interaction.customId.split('_')[1]
-    // https://discordjs.guide/interactions/modals.html#the-interactioncreate-event
     return getSpecificMovieButtonClicked({ interaction, movieName })
   }
   if (interaction.customId.startsWith('HomeMovieButton')) {
@@ -60,12 +68,21 @@ const buttonClickedEvent = async (interaction) => {
       embeds: embeddedMessage
     })
   }
+  if (interaction.customId.startsWith('ToggleMovieWatched')) {
+    const movieName = interaction.customId.split('_')[1]
+    const isMovieWatched = interaction.customId.split('_')[2]
+    return toggleMovieWatchedButtonClicked({ interaction, movieName, isMovieWatched })
+  }
 }
 
 const modalSubmitEvent = async (interaction) => {
   if (interaction.customId.startsWith('AddMovieModalSubmit')) {
     const selectedGenre = interaction.customId.split('_')[1]
     return addMovieModalSubmit({ interaction, selectedGenre })
+  }
+  if (interaction.customId.startsWith('EditMovieModalSubmit')) {
+    const oldMovieName = interaction.customId.split('_')[1]
+    return editMovieModalSubmit({ interaction, oldMovieName })
   }
 }
 

@@ -124,9 +124,15 @@ const getMovieListFields = (movieList) => {
   }
   const first5OnlyForNow = movieList.slice(0, 5)
   return first5OnlyForNow.map((movie) => {
+    const isMovieWatched = movie.isMovieWatched
+    const isMovieWatchedText = isMovieWatched ? '✅ Watched' : ':x: Not Watched'
+    const movieDescriptionText = movie.description ? movie.description + '\n' : ''
+    const movieURLText = movie.movieURL ? movie.movieURL + '\n' : ''
     return {
       name: movie.name + ' - ' + movie.genre,
-      value: (movie.movieUrl + '\n' + movie.description + '\n\u200b\n') || ''
+      value: (
+        movieDescriptionText + movieURLText + isMovieWatchedText + '\n\u200b\n')
+        || '\u200b'
     }
   })
 }

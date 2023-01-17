@@ -5,9 +5,9 @@ const constants = require('../Utils/constants')
 
 const getComponentsMoviesMoviePage = (movieDetails, selectedGenre) => {
   const isMovieWatched = movieDetails.isMovieWatched
-  const isMovieWatchedEmoji = isMovieWatched ? '✅' : '✖️';
-  const isMovieWatchedStyle = isMovieWatched ? 3 : 4;
-  const isMovieWatchedText = isMovieWatched ? 'Watched' : 'Not Watched';
+  const isMovieWatchedEmoji = isMovieWatched === 'true' ? '✅' : '✖️';
+  const isMovieWatchedStyle = isMovieWatched === 'true' ? 3 : 4;
+  const isMovieWatchedText = isMovieWatched === 'true' ? 'Watched' : 'Not Watched';
   const genreForRandom = selectedGenre ? selectedGenre : movieDetails.genre
 
   let components = [
@@ -24,7 +24,7 @@ const getComponentsMoviesMoviePage = (movieDetails, selectedGenre) => {
         {
           "style": 1,
           "label": `Edit Movie Details`,
-          "custom_id": `EditMovieButton_${movieDetails.movieName}`,
+          "custom_id": `EditMovieButton_${movieDetails.name}`,
           "disabled": false,
           "type": 2
         },
@@ -46,7 +46,7 @@ const getComponentsMoviesMoviePage = (movieDetails, selectedGenre) => {
           "style": isMovieWatchedStyle,
           "emoji": isMovieWatchedEmoji,
           "label": isMovieWatchedText,
-          "custom_id": `IsMovieWatched_${isMovieWatched}`,
+          "custom_id": `ToggleMovieWatched_${movieDetails.name}_${isMovieWatched}`,
           "disabled": false,
           "type": 2
         }
@@ -96,7 +96,7 @@ module.exports = {
     const embedImage = movieDetails.imageURL || null
     const fields = getMovieListFields(movieDetails)
     const messageTitle = 'Bradán Feasa - Movies'
-    let messageDescription = `${movieDetails.movieUrl}\n`
+    let messageDescription = `${movieDetails.description}\n${movieDetails.movieURL}\n`
     // let files = null
     // const embedThumbnail = movieDetails.imageURL || "attachment://fish_popcorn.png"
     const embedThumbnail = movieDetails.imageURL || constants.MOVIES_DEFAULT_THUMBNAIL
