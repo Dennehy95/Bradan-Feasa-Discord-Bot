@@ -1,9 +1,8 @@
 const { REST, Routes } = require('discord.js')
 const dotenv = require('dotenv')
-dotenv.config()
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 const fs = require('node:fs')
 const { join } = require('path');
-const { pathToFileURL } = require('url');
 
 const commands = [];
 const commandsPath = join(__dirname, 'src/Commands');
@@ -17,7 +16,7 @@ for (const file of commandFiles) {
 }
 
 // Construct and prepare an instance of the REST module
-const rest = new REST({ version: '10' }).setToken(process.env.BETA_DISCORD_TOKEN);
+const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
 // and deploy your commands!
 (async () => {

@@ -5,8 +5,18 @@ const { getMoviesOverviewPage } = require('../moviesOverviewPage.js');
 
 const NON_ALLOWED_GENRES = ['All genres', 'Any', 'Any Genre', 'All']
 
+const isValidHttpUrl = (string) => {
+  let url;
+  try {
+    url = new URL(string);
+  } catch (_) {
+    return false;
+  }
+  return url.protocol === "http:" || url.protocol === "https:";
+}
+
 module.exports = {
-  async addMovieModalSubmit (data) {
+  async addMovieModalSubmit(data) {
     const { interaction, selectedGenre = '' } = { ...data }
     const guildId = interaction.guild.id;
     let guildProfile = await Guild.findOne({ guildId: guildId });
@@ -21,9 +31,16 @@ module.exports = {
 
     const newMovieName = interaction.fields.getTextInputValue('AddMovieNameInput');
     const newMovieGenre = interaction.fields.getTextInputValue('AddMovieGenreInput');
-    const newMovieDescription = interaction.fields.getTextInputValue('AddMovieDescriptionInput') || '\u200b';
-    const newMovieImageURL = interaction.fields.getTextInputValue('AddMovieImageInput') || '\u200b';
-    const newMovieURL = interaction.fields.getTextInputValue('AddMovieURLInput') || '\u200b';
+    const newMovieDescription = interaction.fields.getTextInputValue('AddMovieDescriptionInput') || '';
+    let newMovieImageURL = interaction.fields.getTextInputValue('AddMovieImageInput') || '';
+    let newMovieURL = interaction.fields.getTextInputValue('AddMovieURLInput') || '';
+
+    if (!isValidHttpUrl(newMovieImageURL)) {
+      newMovieImageURL = ''
+    }
+    if (!isValidHttpUrl(newMovieURL)) {
+      newMovieURL = ''
+    }
 
     if (!newMovieName || !newMovieGenre) {
       const noticeMessage = `Error adding movie: Missing name or genre`
@@ -85,7 +102,7 @@ module.exports = {
     })
   },
 
-  async editMovieModalSubmit (data) {
+  async editMovieModalSubmit(data) {
     const { interaction, oldMovieName = '' } = { ...data }
     const guildId = interaction.guild.id;
     let guildProfile = await Guild.findOne({ guildId: guildId });
@@ -101,8 +118,15 @@ module.exports = {
     const newMovieName = interaction.fields.getTextInputValue('EditMovieNameInput');
     const newMovieGenre = interaction.fields.getTextInputValue('EditMovieGenreInput');
     const newMovieDescription = interaction.fields.getTextInputValue('EditMovieDescriptionInput');
-    const newMovieImageURL = interaction.fields.getTextInputValue('EditMovieImageInput');
-    const newMovieURL = interaction.fields.getTextInputValue('EditMovieURLInput');
+    let newMovieImageURL = interaction.fields.getTextInputValue('EditMovieImageInput');
+    let newMovieURL = interaction.fields.getTextInputValue('EditMovieURLInput');
+
+    if (!isValidHttpUrl(newMovieImageURL)) {
+      newMovieImageURL = ''
+    }
+    if (!isValidHttpUrl(newMovieURL)) {
+      newMovieURL = ''
+    }
 
     if (!newMovieName || !newMovieGenre) {
       const noticeMessage = `Error adding movie: Missing name or genre`
@@ -124,16 +148,15 @@ module.exports = {
 
     const updatedMoviesData = guildProfile.moviesData
     const movieList = updatedMoviesData.movieList || []
-    console.log(movieList)
     const movieDetails = movieList.find((movie) => {
       return movie.name === oldMovieName
     })
 
     movieDetails.name = newMovieName
     movieDetails.genre = newMovieGenre
-    movieDetails.description = newMovieDescription || '\u200b'
-    movieDetails.imageURL = newMovieImageURL || '\u200b'
-    movieDetails.movieURL = newMovieURL || '\u200b'
+    movieDetails.description = newMovieDescription || ''
+    movieDetails.imageURL = newMovieImageURL || ''
+    movieDetails.movieURL = newMovieURL || ''
 
     if (!updatedMoviesData.genreList.some((genre) => {
       return genre.toLowerCase() === newMovieGenre.toLowerCase()

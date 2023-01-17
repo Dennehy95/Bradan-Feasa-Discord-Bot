@@ -1,8 +1,33 @@
 # Bradan-Feasa-Discord-Bot
-To Run Bot: node ./app.js
+To Run Bot: 
+npm run start:dev
+OR
+npm run start:prod
 
-Beta Invite Link
-https://discord.com/api/oauth2/authorize?client_id=1063480478507728947&permissions=10942539888&scope=bot%20applications.commands
+Refresh Commands
+Just Denneland test server:
+
+Dev code
+npm run deploy-commands-test:dev
+
+Prod code
+npm run deploy-commands-test:prod
+
+All servers
+Dev code
+npm run deploy-commands-global:dev
+
+Prod code
+npm run deploy-commands-global:prod
+
+# Node Details 
+Developed using Node v18.13.0
+
+# Beta Invite Link
+https://discord.com/api/oauth2/authorize?client_id=1063480478507728947&permissions=10942441680&scope=bot%20applications.commands
+
+# Prod Invite Link
+https://discord.com/api/oauth2/authorize?client_id=1064981274416132237&permissions=10942441680&scope=bot%20applications.commands
 
 Permissions: View Channels, Send Messages, Manage Messages, Manage Nicknames, Change Nicknames, Manage Events, Embed Links, Attach Files, Read Message History, Connect and Speak, Bot and Application commands
 
@@ -26,5 +51,7 @@ Bot Code Setup
 
 Database setup:
 https://www.mongodb.com/try/download/community
+
+
 
 VSCode Extension Setup:

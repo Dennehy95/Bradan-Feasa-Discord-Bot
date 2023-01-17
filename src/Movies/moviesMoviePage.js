@@ -2,6 +2,7 @@ const { createEmbedMessage } = require('../Utils/discordEmbedUtils.js')
 const Guild = require("../Schemas/guild");
 const mongoose = require("mongoose");
 const constants = require('../Utils/constants')
+const { getMoviesOverviewPage } = require('./moviesOverviewPage.js');
 
 const getComponentsMoviesMoviePage = (movieDetails, selectedGenre) => {
   const isMovieWatched = movieDetails.isMovieWatched
@@ -65,7 +66,7 @@ const getMovieListFields = (movieDetails) => {
 }
 
 module.exports = {
-  async getMoviesMoviePage (data) {
+  async getMoviesMoviePage(data) {
     const { interaction, selectedGenre = '', movieName = '', noticeMessage = '' } = { ...data }
     const guild = interaction.guild
     const guildId = guild.id
@@ -73,6 +74,11 @@ module.exports = {
 
     const moviesData = guildProfile.moviesData
     const movieList = moviesData.movieList || []
+
+    if (movieList.length === 0) {
+      const { components, embeddedMessage } = await getMoviesOverviewPage({ interaction })
+      return { components, embeddedMessage }
+    }
 
     let movieDetails = {}
     if (movieName) {
@@ -96,16 +102,10 @@ module.exports = {
     const embedImage = movieDetails.imageURL || null
     const fields = getMovieListFields(movieDetails)
     const messageTitle = 'Bradán Feasa - Movies'
-    let messageDescription = `${movieDetails.description}\n${movieDetails.movieURL}\n`
-    // let files = null
-    // const embedThumbnail = movieDetails.imageURL || "attachment://fish_popcorn.png"
+
+    let messageDescription = null
+    if (movieDetails.description || movieDetails.movieURL) messageDescription = `${movieDetails.description}\n${movieDetails.movieURL}\n`
     const embedThumbnail = movieDetails.imageURL || constants.MOVIES_DEFAULT_THUMBNAIL
-    // if (!movieDetails.imageURL) {
-    //   files = [{
-    //     attachment: './src/LocalImages/fish_popcorn.png',
-    //     name: 'fish_popcorn.png'
-    //   }]
-    // }
 
     const embeddedMessage = createEmbedMessage({ embedColor, embedFooter, embedImage, embedThumbnail, fields, messageDescription, messageTitle })
     return { components, embeddedMessage }

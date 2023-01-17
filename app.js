@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const dotenv = require('dotenv')
-dotenv.config()
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 
 /* Mongo DB Database Open */
 const { DATABASE_TOKEN } = process.env
@@ -31,8 +31,7 @@ client.handleCommands();
 // client.handleComponents();
 
 /* Client Login */
-client.login(process.env.BETA_DISCORD_TOKEN);
-// client.login(process.env.DISCORD_TOKEN);
+client.login(process.env.DISCORD_TOKEN);
 
 /* Database Connect */
 (async () => {

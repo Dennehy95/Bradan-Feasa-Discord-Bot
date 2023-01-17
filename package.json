@@ -10,6 +10,12 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
+    "deploy-commands-test:dev": "NODE_ENV=dev node deploy-commands-dev.js",
+    "deploy-commands-test:prod": "NODE_ENV=dev node deploy-commands-dev.js",
+    "deploy-commands-global:dev": "NODE_ENV=prod node deploy-commands-global.js",
+    "deploy-commands-global:prod": "NODE_ENV=prod node deploy-commands-global.js",
+    "start:dev": "NODE_ENV=dev node ./app.js",
+    "start:prod": "NODE_ENV=prod node ./app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

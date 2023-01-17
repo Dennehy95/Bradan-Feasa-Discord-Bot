@@ -30,9 +30,8 @@ const getMovie = async () => {
 }
 
 module.exports = {
-  async addMovieButtonClicked (data) {
+  async addMovieButtonClicked(data) {
     const { interaction, selectedGenre = '' } = { ...data }
-    const selectedGenreValue = selectedGenre !== 'All Genres' ? selectedGenre : '\u200b'
 
     const modal = new ModalBuilder()
       .setCustomId(`AddMovieModalSubmit_${selectedGenre}`)
@@ -47,54 +46,61 @@ module.exports = {
             .setMaxLength(70)
             .setPlaceholder('Movie Name')
             .setRequired(true),
-        ),
-        new ActionRowBuilder().addComponents(
-          new TextInputBuilder()
-            .setCustomId('AddMovieGenreInput')
-            .setLabel('Genre')
-            .setStyle(TextInputStyle.Short)
-            .setMinLength(1)
-            .setMaxLength(30)
-            .setPlaceholder('Movie Genre')
-            .setRequired(true)
-            .setValue(selectedGenreValue),
-        ),
-        new ActionRowBuilder().addComponents(
-          new TextInputBuilder()
-            .setCustomId('AddMovieDescriptionInput')
-            .setLabel('Optional Description')
-            .setStyle(TextInputStyle.Paragraph)
-            .setMinLength(1)
-            .setMaxLength(200)
-            .setPlaceholder('Movie Description')
-            .setRequired(false),
-        ),
-        new ActionRowBuilder().addComponents(
-          new TextInputBuilder()
-            .setCustomId('AddMovieImageInput')
-            .setLabel('URL to an image for the movie')
-            .setStyle(TextInputStyle.Short)
-            .setMinLength(1)
-            .setMaxLength(150)
-            .setPlaceholder('Image URL')
-            .setRequired(false),
-        ),
-        new ActionRowBuilder().addComponents(
-          new TextInputBuilder()
-            .setCustomId('AddMovieURLInput')
-            .setLabel('IMBD, Wikipedia or Rotten Tomatoes URL')
-            .setStyle(TextInputStyle.Short)
-            .setMinLength(1)
-            .setMaxLength(100)
-            .setPlaceholder('URL')
-            .setRequired(false),
-        ),
-      ]);
+        )]);
+
+    const genreInput = new ActionRowBuilder().addComponents(
+      new TextInputBuilder()
+        .setCustomId('AddMovieGenreInput')
+        .setLabel('Genre')
+        .setStyle(TextInputStyle.Short)
+        .setMinLength(1)
+        .setMaxLength(30)
+        .setPlaceholder('Movie Genre')
+        .setRequired(true),
+    )
+    const selectedGenreValue = selectedGenre !== 'All Genres' ? selectedGenre : ''
+    if (selectedGenreValue) {
+      genreInput.setValue(selectedGenreValue)
+    }
+
+    modal.addComponents([
+      genreInput,
+      new ActionRowBuilder().addComponents(
+        new TextInputBuilder()
+          .setCustomId('AddMovieDescriptionInput')
+          .setLabel('Optional Description')
+          .setStyle(TextInputStyle.Paragraph)
+          .setMinLength(1)
+          .setMaxLength(200)
+          .setPlaceholder('Movie Description')
+          .setRequired(false),
+      ),
+      new ActionRowBuilder().addComponents(
+        new TextInputBuilder()
+          .setCustomId('AddMovieImageInput')
+          .setLabel('URL to an image for the movie')
+          .setStyle(TextInputStyle.Short)
+          .setMinLength(1)
+          .setMaxLength(150)
+          .setPlaceholder('Image URL')
+          .setRequired(false),
+      ),
+      new ActionRowBuilder().addComponents(
+        new TextInputBuilder()
+          .setCustomId('AddMovieURLInput')
+          .setLabel('IMBD, Wikipedia or Rotten Tomatoes URL')
+          .setStyle(TextInputStyle.Short)
+          .setMinLength(1)
+          .setMaxLength(100)
+          .setPlaceholder('URL')
+          .setRequired(false),
+      ),
+    ])
 
     await interaction.showModal(modal);
   },
 
-  async editMovieButtonClicked (data) {
+  async editMovieButtonClicked(data) {
     const { interaction, selectedMovieName } = { ...data }
     if (!selectedMovieName) return
 
@@ -135,46 +141,56 @@ module.exports = {
             .setPlaceholder('Movie Genre')
             .setRequired(true)
             .setValue(genre),
-        ),
-        new ActionRowBuilder().addComponents(
-          new TextInputBuilder()
-            .setCustomId('EditMovieDescriptionInput')
-            .setLabel('Optional Description')
-            .setStyle(TextInputStyle.Paragraph)
-            .setMinLength(1)
-            .setMaxLength(200)
-            .setPlaceholder('Movie Description')
-            .setRequired(false)
-            .setValue(description || '\u200b'),
-        ),
-        new ActionRowBuilder().addComponents(
-          new TextInputBuilder()
-            .setCustomId('EditMovieImageInput')
-            .setLabel('URL to an image for the movie')
-            .setStyle(TextInputStyle.Short)
-            .setMinLength(1)
-            .setMaxLength(150)
-            .setPlaceholder('Image URL')
-            .setRequired(false)
-            .setValue(imageURL || '\u200b'),
-        ),
-        new ActionRowBuilder().addComponents(
-          new TextInputBuilder()
-            .setCustomId('EditMovieURLInput')
-            .setLabel('IMBD, Wikipedia or Rotten Tomatoes URL')
-            .setStyle(TextInputStyle.Short)
-            .setMinLength(1)
-            .setMaxLength(100)
-            .setPlaceholder('URL')
-            .setRequired(false)
-            .setValue(movieURL || '\u200b'),
-        ),
-      ]);
+        )])
+    const descriptionInput =
+      new ActionRowBuilder().addComponents(
+        new TextInputBuilder()
+          .setCustomId('EditMovieDescriptionInput')
+          .setLabel('Optional Description')
+          .setStyle(TextInputStyle.Paragraph)
+          .setMinLength(1)
+          .setMaxLength(200)
+          .setPlaceholder('Movie Description')
+          .setRequired(false),
+      )
+    if (description) descriptionInput.setValue(description)
+
+    const imageURLInput =
+      new ActionRowBuilder().addComponents(
+        new TextInputBuilder()
+          .setCustomId('EditMovieImageInput')
+          .setLabel('URL to an image for the movie')
+          .setStyle(TextInputStyle.Short)
+          .setMinLength(1)
+          .setMaxLength(150)
+          .setPlaceholder('Image URL')
+          .setRequired(false)
+      )
+    if (imageURL) movieURLInput.setValue(imageURL)
+
+    const movieURLInput =
+      new ActionRowBuilder().addComponents(
+        new TextInputBuilder()
+          .setCustomId('EditMovieURLInput')
+          .setLabel('IMBD, Wikipedia or Rotten Tomatoes URL')
+          .setStyle(TextInputStyle.Short)
+          .setMinLength(1)
+          .setMaxLength(100)
+          .setPlaceholder('URL')
+          .setRequired(false)
+      )
+    if (movieURL) movieURLInput.setValue(movieURL)
+
+    modal.addComponents([
+      descriptionInput,
+      imageURLInput,
+      movieURLInput
+    ])
 
     await interaction.showModal(modal);
   },
 
-  async getRandomMovieButtonClicked (data) {
+  async getRandomMovieButtonClicked(data) {
     const { interaction, selectedGenre } = { ...data }
     const { components, embeddedMessage } = await getMoviesMoviePage({ interaction, selectedGenre })
 
@@ -184,7 +200,7 @@ module.exports = {
     })
   },
 
-  async getSpecificMovieButtonClicked (data) {
+  async getSpecificMovieButtonClicked(data) {
     const { interaction, movieName } = { ...data }
     const { components, embeddedMessage } = await getMoviesMoviePage({ interaction, movieName })
 
@@ -194,7 +210,7 @@ module.exports = {
     })
   },
 
-  async toggleMovieWatchedButtonClicked (data) {
+  async toggleMovieWatchedButtonClicked(data) {
     const { interaction, movieName, isMovieWatched } = { ...data }
 
     const guild = interaction.guild
