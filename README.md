@@ -24,5 +24,20 @@ Bot Code Setup
 2. npm install --save discord.js dotenv
 3. npm init -y
 
+Database setup:
+https://www.mongodb.com/try/download/community
+
+Database Structure
+
+Database Name: BradanFeasaBot
+Collection: DiscordGuilds: [
+  {
+    guildId: "GUILD ID",
+    movies: [
+      
+    ]
+  }
+]
+
 
 VSCode Extension Setup:

@@ -1,59 +1,42 @@
-import fs from 'node:fs'
-import { join } from 'path';
-import { pathToFileURL } from 'url';
+const fs = require('node:fs');
+const path = require('node:path');
 
-import dotenv from 'dotenv'
+const dotenv = require('dotenv')
 dotenv.config()
 
-/* AceBase Database Open */
-import { AceBase } from 'acebase';
-const options = { logLevel: 'log', storage: { path: '.' } }; // optional settings
-const database = new AceBase('BradanFeasaAceBaseDatabase', options);  // Creates or opens a database with name "mydb"
-
-await database.ready(() => {
-    console.log('ACEBASE good to go')
-})
+/* Mongo DB Database Open */
+const { DATABASE_TOKEN } = process.env
+const { connect, set } = require('mongoose')
 
 
-import { Client, Collection, Events, GatewayIntentBits } from "discord.js"
+const { Client, Collection, Events, GatewayIntentBits } = require('discord.js')
 const client = new Client({
     intents: [GatewayIntentBits.Guilds]
 })
 
-/*********** Commands Loader ************/
 client.commands = new Collection();
+client.buttons = new Collection();
+client.selectMenus = new Collection();
+client.modals = new Collection();
+client.commandsArray = [];
 
-const commandsPath = join(process.cwd(), 'commands');
-const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-
-for (const file of commandFiles) {
-    const filePath = join(commandsPath, file);
-    const command = await import(pathToFileURL(filePath));
-
-    // Set a new item in the Collection with the key as the command name and the value as the exported module
-    if ('data' in command && 'execute' in command) {
-        client.commands.set(command.data.name, command);
-    } else {
-        console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
-    }
+const functionsPath = path.join(__dirname, 'src/Functions/handlers');
+const functionsFiles = fs.readdirSync(functionsPath).filter(file => file.endsWith('.js'));
+for (const file of functionsFiles) {
+    const filePath = `./src/Functions/handlers/${file}`.toString();
+    require(filePath)(client);
 }
-
-
-/*********** Events Loader ************/
-const eventsPath = join(process.cwd(), 'Events');
-const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
-
-for (const file of eventFiles) {
-    const filePath = join(eventsPath, file);
-    const event = await import(pathToFileURL(filePath));
-    if (event.once) {
-        client.once(event.name, (...args) => event.execute(...args));
-    } else {
-        client.on(event.name, (...args) => event.execute(...args));
-    }
-}
+client.handleEvents();
+client.handleCommands();
+// client.handleComponents();
 
 /* Client Login */
-
 client.login(process.env.BETA_DISCORD_TOKEN);
 // client.login(process.env.DISCORD_TOKEN);
+
+/* Database Connect */
+(async () => {
+    set('strictQuery', false);
+    await connect(DATABASE_TOKEN)
+        .catch(console.error)
+})()
