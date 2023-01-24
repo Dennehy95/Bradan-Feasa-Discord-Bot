@@ -54,7 +54,8 @@ const getMoviePageActionButtons = (updatedSelectedGenre) => {
   return moviePageActionButtons
 }
 
-const getComponentsMoviesOverviewPage = (movieList, genreList, updatedSelectedGenre) => {
+const getComponentsMoviesOverviewPage = (data) => {
+  const { genreList, movieList, pageNumber = 1, totalPages, updatedSelectedGenre } = { ...data }
   const genreOptions = genreList.map((genre) => {
     const isDefault = genre === updatedSelectedGenre
     return {
@@ -79,15 +80,15 @@ const getComponentsMoviesOverviewPage = (movieList, genreList, updatedSelectedGe
         {
           "style": 1,
           "label": `<< Previous Page`,
-          "custom_id": `PreviousPage`,
-          "disabled": true,
+          "custom_id": `MOPage_${parseInt(pageNumber) - 1}_${updatedSelectedGenre}`,
+          "disabled": totalPages <= 1,
           "type": 2
         },
         {
           "style": 1,
           "label": `Next Page >>`,
-          "custom_id": `NextPage`,
-          "disabled": true,
+          "custom_id": `MOPage_${parseInt(pageNumber) + 1}_${updatedSelectedGenre}`,
+          "disabled": totalPages <= 1,
           "type": 2
         }
       ]
@@ -153,8 +154,8 @@ const getSelectedGenreFromInteraction = (interaction, genreList) => {
 
 module.exports = {
 
-  async getMoviesOverviewPage(data) {
-    const { interaction, noticeMessage = '', selectedGenre } = { ...data }
+  async getMoviesOverviewPage (data) {
+    const { interaction, pageNumber = 1, noticeMessage = '', selectedGenre } = { ...data }
     const guild = interaction.guild
     const guildId = guild.id
     let guildProfile = await Guild.findOne({ guildId: guildId });
@@ -165,7 +166,6 @@ module.exports = {
         guildName: guild.name,
         moviesData: {
           genreList: [],
-          // movieList: constants.EMPTY_MOVIE_LIST
           movieList: [],
         }
       });
@@ -184,13 +184,23 @@ module.exports = {
         return movie.genre === selectedGenre
       })
     }
-    const first5OnlyForNow = filteredMovieList.slice(0, 5)
 
-    const components = getComponentsMoviesOverviewPage(first5OnlyForNow, genreList, updatedSelectedGenre)
+    let updatedPageNumber = parseInt(pageNumber)
+    let totalPages = Math.ceil(filteredMovieList.length / 5)
+    if (totalPages === 0) totalPages = 1
+    if (updatedPageNumber > totalPages) updatedPageNumber = 1
+    if (updatedPageNumber === 0) {
+      updatedPageNumber = totalPages
+    }
+    const moviesListEndIndex = updatedPageNumber * 5
+    const moviesOnPage = filteredMovieList.slice(moviesListEndIndex - 5, moviesListEndIndex)
+
+    const components = getComponentsMoviesOverviewPage({ genreList, movieList: moviesOnPage, pageNumber: updatedPageNumber, totalPages, updatedSelectedGenre })
     const embedColor = '0xabffcd'
-    const embedFooter = noticeMessage || '\u200b'
+    const pageNumberText = '\n\u200b\nPage ' + updatedPageNumber + ' of ' + totalPages
+    const embedFooter = noticeMessage + pageNumberText || pageNumberText
     const embedImage = null
-    const fields = getMovieListFields(first5OnlyForNow)
+    const fields = getMovieListFields(moviesOnPage)
     const messageTitle = 'Bradán Feasa - Movies'
     let messageDescription = 'Selected Genre: ' + updatedSelectedGenre + '\n'
 

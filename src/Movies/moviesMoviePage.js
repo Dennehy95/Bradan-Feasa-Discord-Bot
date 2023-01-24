@@ -53,6 +53,18 @@ const getComponentsMoviesMoviePage = (movieDetails, selectedGenre) => {
         }
       ]
     },
+    // {
+    //   "type": 1,
+    //   "components": [
+    //     {
+    //       "style": 4,
+    //       "label": `Delete Movie`,
+    //       "custom_id": `DeleteMovie_${movieDetails._id}_${selectedGenre}`,
+    //       "disabled": false,
+    //       "type": 2
+    //     },
+    //   ]
+    // },
   ]
 
   return components
@@ -66,7 +78,7 @@ const getMovieListFields = (movieDetails) => {
 }
 
 module.exports = {
-  async getMoviesMoviePage(data) {
+  async getMoviesMoviePage (data) {
     const { interaction, selectedGenre = '', movieId = '', noticeMessage = '' } = { ...data }
     const guild = interaction.guild
     const guildId = guild.id

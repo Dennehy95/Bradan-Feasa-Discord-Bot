@@ -24,7 +24,7 @@ const getMovie = async () => {
 }
 
 module.exports = {
-  async addMovieButtonClicked(data) {
+  async addMovieButtonClicked (data) {
     const { interaction, selectedGenre = '' } = { ...data }
 
     const modal = new ModalBuilder()
@@ -94,7 +94,29 @@ module.exports = {
     await interaction.showModal(modal);
   },
 
-  async editMovieButtonClicked(data) {
+  async deleteMovieButtonClicked (data) {
+    const { interaction, movieId, selectedGenre = '' } = { ...data }
+
+    if (!movieId) return
+
+    const guild = interaction.guild
+    const guildId = guild.id
+    const guildProfile = await Guild.findOne({ guildId: guildId });
+
+    const moviesData = guildProfile.moviesData
+    const movieList = moviesData.movieList || []
+    const movieDetails = await movieList.find((movie) => {
+      return movie._id === movieId
+    })
+
+    const modal = new ModalBuilder()
+      .setCustomId(`RemoveMovieModalSubmit__${movieId}_${selectedGenre}`)
+      .setTitle(`Delete Movie - ${movieDetails.name}?`)
+
+    await interaction.showModal(modal);
+  },
+
+  async editMovieButtonClicked (data) {
     const { interaction, movieId } = { ...data }
     if (!movieId) return
 
@@ -182,7 +204,7 @@ module.exports = {
     await interaction.showModal(modal);
   },
 
-  async getRandomMovieButtonClicked(data) {
+  async getRandomMovieButtonClicked (data) {
     const { interaction, selectedGenre } = { ...data }
     const { components, embeddedMessage } = await getMoviesMoviePage({ interaction, selectedGenre })
 
@@ -192,7 +214,7 @@ module.exports = {
     })
   },
 
-  async getSpecificMovieButtonClicked(data) {
+  async getSpecificMovieButtonClicked (data) {
     const { interaction, movieId } = { ...data }
     const { components, embeddedMessage } = await getMoviesMoviePage({ interaction, movieId })
 
@@ -202,7 +224,7 @@ module.exports = {
     })
   },
 
-  async toggleMovieWatchedButtonClicked(data) {
+  async toggleMovieWatchedButtonClicked (data) {
     const { interaction, movieId, isMovieWatched } = { ...data }
 
     const guild = interaction.guild

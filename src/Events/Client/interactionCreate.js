@@ -12,7 +12,7 @@ const { getMoviesOverviewPage } = require('../../Movies/moviesOverviewPage.js');
 
 module.exports = {
   name: Events.InteractionCreate,
-  async execute(interaction) {
+  async execute (interaction) {
     if (interaction.isButton()) {
       return buttonClickedEvent(interaction)
     }
@@ -47,23 +47,36 @@ const buttonClickedEvent = async (interaction) => {
     // https://discordjs.guide/interactions/modals.html#the-interactioncreate-event
     return addMovieButtonClicked({ interaction, selectedGenre })
   }
+  if (interaction.customId.startsWith('DeleteMovie')) {
+    const movieId = interaction.customId.split('_')[1]
+    const selectedGenre = interaction.customId.split('_')[2]
+    return deleteMovieButtonClicked({ interaction, movieId, selectedGenre })
+  }
   if (interaction.customId.startsWith('EditMovieButton')) {
-    // const selectedMovieName = interaction.customId.split('_')[1]
     const movieId = interaction.customId.split('_')[1]
     return editMovieButtonClicked({ interaction, movieId })
+  }
+  if (interaction.customId.startsWith('HomeMovieButton')) {
+    const selectedGenre = interaction.customId.split('_')[1]
+    const { components, embeddedMessage } = await getMoviesOverviewPage({ interaction, selectedGenre })
+
+    await interaction.update({
+      components,
+      embeds: embeddedMessage
+    })
   }
   if (interaction.customId.startsWith('GetRandomMovie')) {
     const selectedGenre = interaction.customId.split('_')[1]
     return getRandomMovieButtonClicked({ interaction, selectedGenre })
   }
   if (interaction.customId.startsWith('GetSpecificMovie')) {
-    // const movieName = interaction.customId.split('_')[1]
     const movieId = interaction.customId.split('_')[1]
     return getSpecificMovieButtonClicked({ interaction, movieId })
   }
-  if (interaction.customId.startsWith('HomeMovieButton')) {
-    const selectedGenre = interaction.customId.split('_')[1]
-    const { components, embeddedMessage } = await getMoviesOverviewPage({ interaction, selectedGenre })
+  if (interaction.customId.startsWith('MOPage_')) {
+    const pageNumber = interaction.customId.split('_')[1]
+    const selectedGenre = interaction.customId.split('_')[2]
+    const { components, embeddedMessage } = await getMoviesOverviewPage({ interaction, pageNumber, selectedGenre })
 
     await interaction.update({
       components,
