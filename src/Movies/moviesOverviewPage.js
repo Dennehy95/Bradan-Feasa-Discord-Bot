@@ -8,7 +8,7 @@ const getMovieButtons = (movieList) => {
     return {
       "style": 3,
       "label": movie.name,
-      "custom_id": `GetSpecificMovie_${movie.name}`,
+      "custom_id": `GetSpecificMovie_${movie._id}`,
       "disabled": false,
       "type": 2
     }
@@ -125,7 +125,7 @@ const getMovieListFields = (movieList) => {
   const first5OnlyForNow = movieList.slice(0, 5)
   return first5OnlyForNow.map((movie) => {
     const isMovieWatched = movie.isMovieWatched
-    const isMovieWatchedText = isMovieWatched ? '✅ Watched' : ':x: Not Watched'
+    const isMovieWatchedText = isMovieWatched === 'true' ? '✅ Watched' : ':x: Not Watched'
     const movieDescriptionText = movie.description ? movie.description + '\n' : ''
     const movieURLText = movie.movieURL ? movie.movieURL + '\n' : ''
     return {
@@ -153,7 +153,7 @@ const getSelectedGenreFromInteraction = (interaction, genreList) => {
 
 module.exports = {
 
-  async getMoviesOverviewPage (data) {
+  async getMoviesOverviewPage(data) {
     const { interaction, noticeMessage = '', selectedGenre } = { ...data }
     const guild = interaction.guild
     const guildId = guild.id
@@ -165,7 +165,8 @@ module.exports = {
         guildName: guild.name,
         moviesData: {
           genreList: [],
-          movieList: []
+          // movieList: constants.EMPTY_MOVIE_LIST
+          movieList: [],
         }
       });
 

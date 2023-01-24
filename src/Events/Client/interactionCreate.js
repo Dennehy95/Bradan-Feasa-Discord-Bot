@@ -12,7 +12,7 @@ const { getMoviesOverviewPage } = require('../../Movies/moviesOverviewPage.js');
 
 module.exports = {
   name: Events.InteractionCreate,
-  async execute (interaction) {
+  async execute(interaction) {
     if (interaction.isButton()) {
       return buttonClickedEvent(interaction)
     }
@@ -48,16 +48,18 @@ const buttonClickedEvent = async (interaction) => {
     return addMovieButtonClicked({ interaction, selectedGenre })
   }
   if (interaction.customId.startsWith('EditMovieButton')) {
-    const selectedMovieName = interaction.customId.split('_')[1]
-    return editMovieButtonClicked({ interaction, selectedMovieName })
+    // const selectedMovieName = interaction.customId.split('_')[1]
+    const movieId = interaction.customId.split('_')[1]
+    return editMovieButtonClicked({ interaction, movieId })
   }
   if (interaction.customId.startsWith('GetRandomMovie')) {
     const selectedGenre = interaction.customId.split('_')[1]
     return getRandomMovieButtonClicked({ interaction, selectedGenre })
   }
   if (interaction.customId.startsWith('GetSpecificMovie')) {
-    const movieName = interaction.customId.split('_')[1]
-    return getSpecificMovieButtonClicked({ interaction, movieName })
+    // const movieName = interaction.customId.split('_')[1]
+    const movieId = interaction.customId.split('_')[1]
+    return getSpecificMovieButtonClicked({ interaction, movieId })
   }
   if (interaction.customId.startsWith('HomeMovieButton')) {
     const selectedGenre = interaction.customId.split('_')[1]
@@ -69,9 +71,10 @@ const buttonClickedEvent = async (interaction) => {
     })
   }
   if (interaction.customId.startsWith('ToggleMovieWatched')) {
-    const movieName = interaction.customId.split('_')[1]
+    // const movieName = interaction.customId.split('_')[1]
+    const movieId = interaction.customId.split('_')[1]
     const isMovieWatched = interaction.customId.split('_')[2]
-    return toggleMovieWatchedButtonClicked({ interaction, movieName, isMovieWatched })
+    return toggleMovieWatchedButtonClicked({ interaction, movieId, isMovieWatched })
   }
 }
 
@@ -81,8 +84,9 @@ const modalSubmitEvent = async (interaction) => {
     return addMovieModalSubmit({ interaction, selectedGenre })
   }
   if (interaction.customId.startsWith('EditMovieModalSubmit')) {
-    const oldMovieName = interaction.customId.split('_')[1]
-    return editMovieModalSubmit({ interaction, oldMovieName })
+    // const oldMovieName = interaction.customId.split('_')[1]
+    const movieId = interaction.customId.split('_')[1]
+    return editMovieModalSubmit({ interaction, movieId })
   }
 }
 

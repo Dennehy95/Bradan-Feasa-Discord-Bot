@@ -25,7 +25,7 @@ const getComponentsMoviesMoviePage = (movieDetails, selectedGenre) => {
         {
           "style": 1,
           "label": `Edit Movie Details`,
-          "custom_id": `EditMovieButton_${movieDetails.name}`,
+          "custom_id": `EditMovieButton_${movieDetails._id}`,
           "disabled": false,
           "type": 2
         },
@@ -47,7 +47,7 @@ const getComponentsMoviesMoviePage = (movieDetails, selectedGenre) => {
           "style": isMovieWatchedStyle,
           "emoji": isMovieWatchedEmoji,
           "label": isMovieWatchedText,
-          "custom_id": `ToggleMovieWatched_${movieDetails.name}_${isMovieWatched}`,
+          "custom_id": `ToggleMovieWatched_${movieDetails._id}_${isMovieWatched}`,
           "disabled": false,
           "type": 2
         }
@@ -67,7 +67,7 @@ const getMovieListFields = (movieDetails) => {
 
 module.exports = {
   async getMoviesMoviePage(data) {
-    const { interaction, selectedGenre = '', movieName = '', noticeMessage = '' } = { ...data }
+    const { interaction, selectedGenre = '', movieId = '', noticeMessage = '' } = { ...data }
     const guild = interaction.guild
     const guildId = guild.id
     let guildProfile = await Guild.findOne({ guildId: guildId });
@@ -81,9 +81,9 @@ module.exports = {
     }
 
     let movieDetails = {}
-    if (movieName) {
+    if (movieId) {
       movieDetails = movieList.find((movie) => {
-        return movie.name === movieName
+        return movie._id === movieId
       })
     } else if (selectedGenre) {
       const filteredMovieList = movieList.filter((movie) => {

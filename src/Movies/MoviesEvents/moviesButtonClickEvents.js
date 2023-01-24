@@ -8,12 +8,6 @@ const Guild = require("../../Schemas/guild");
 
 const { getMoviesMoviePage } = require('../../Movies/moviesMoviePage.js')
 
-const getMoviesData = async () => {
-
-
-  return { guildProfile, moviesData, movieDetails }
-}
-
 const getMovie = async () => {
   const guild = interaction.guild
   const guildId = guild.id
@@ -101,8 +95,8 @@ module.exports = {
   },
 
   async editMovieButtonClicked(data) {
-    const { interaction, selectedMovieName } = { ...data }
-    if (!selectedMovieName) return
+    const { interaction, movieId } = { ...data }
+    if (!movieId) return
 
     const guild = interaction.guild
     const guildId = guild.id
@@ -110,15 +104,13 @@ module.exports = {
 
     const moviesData = guildProfile.moviesData
     const movieList = moviesData.movieList || []
-
-    let movieDetails = movieList.find((movie) => {
-      return movie.name === selectedMovieName
+    const movieDetails = await movieList.find((movie) => {
+      return movie._id === movieId
     })
-    const { name, genre, movieURL, description, imageURL } = { ...movieDetails }
 
     const modal = new ModalBuilder()
-      .setCustomId(`EditMovieModalSubmit_${selectedMovieName}`)
-      .setTitle(`Edit ${selectedMovieName}`)
+      .setCustomId(`EditMovieModalSubmit_${movieId}`)
+      .setTitle(`Edit ${movieDetails.name}`)
       .addComponents([
         new ActionRowBuilder().addComponents(
           new TextInputBuilder()
@@ -129,7 +121,7 @@ module.exports = {
             .setMaxLength(70)
             .setPlaceholder('Movie Name')
             .setRequired(true)
-            .setValue(name),
+            .setValue(movieDetails.name),
         ),
         new ActionRowBuilder().addComponents(
           new TextInputBuilder()
@@ -140,7 +132,7 @@ module.exports = {
             .setMaxLength(30)
             .setPlaceholder('Movie Genre')
             .setRequired(true)
-            .setValue(genre),
+            .setValue(movieDetails.genre),
         )])
     const descriptionInput =
       new ActionRowBuilder().addComponents(
@@ -153,7 +145,7 @@ module.exports = {
           .setPlaceholder('Movie Description')
           .setRequired(false),
       )
-    if (description) descriptionInput.components[0].setValue(description)
+    if (movieDetails.description) descriptionInput.components[0].setValue(movieDetails.description)
 
     const imageURLInput =
       new ActionRowBuilder().addComponents(
@@ -166,7 +158,7 @@ module.exports = {
           .setPlaceholder('Image URL')
           .setRequired(false)
       )
-    if (imageURL) imageURLInput.components[0].setValue(imageURL)
+    if (movieDetails.imageURL) imageURLInput.components[0].setValue(movieDetails.imageURL)
 
     const movieURLInput =
       new ActionRowBuilder().addComponents(
@@ -179,7 +171,7 @@ module.exports = {
           .setPlaceholder('URL')
           .setRequired(false)
       )
-    if (movieURL) movieURLInput.components[0].setValue(movieURL)
+    if (movieDetails.movieURL) movieURLInput.components[0].setValue(movieDetails.movieURL)
 
     modal.addComponents([
       descriptionInput,
@@ -201,8 +193,8 @@ module.exports = {
   },
 
   async getSpecificMovieButtonClicked(data) {
-    const { interaction, movieName } = { ...data }
-    const { components, embeddedMessage } = await getMoviesMoviePage({ interaction, movieName })
+    const { interaction, movieId } = { ...data }
+    const { components, embeddedMessage } = await getMoviesMoviePage({ interaction, movieId })
 
     return await interaction.update({
       components,
@@ -211,7 +203,7 @@ module.exports = {
   },
 
   async toggleMovieWatchedButtonClicked(data) {
-    const { interaction, movieName, isMovieWatched } = { ...data }
+    const { interaction, movieId, isMovieWatched } = { ...data }
 
     const guild = interaction.guild
     const guildId = guild.id
@@ -221,7 +213,7 @@ module.exports = {
     const movieList = moviesData.movieList || []
 
     let movieDetails = movieList.find((movie) => {
-      return movie.name === movieName
+      return movie._id === movieId
     })
 
     movieDetails.isMovieWatched = isMovieWatched === 'false' ? 'true' : 'false'
@@ -231,7 +223,7 @@ module.exports = {
       { $set: { moviesData: moviesData } }
     )
 
-    const { components, embeddedMessage } = await getMoviesMoviePage({ interaction, movieName })
+    const { components, embeddedMessage } = await getMoviesMoviePage({ interaction, movieId })
 
     return await interaction.update({
       components,

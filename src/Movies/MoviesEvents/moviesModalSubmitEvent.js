@@ -29,11 +29,17 @@ module.exports = {
       })
     }
 
-    const newMovieName = interaction.fields.getTextInputValue('AddMovieNameInput');
-    const newMovieGenre = interaction.fields.getTextInputValue('AddMovieGenreInput');
-    const newMovieDescription = interaction.fields.getTextInputValue('AddMovieDescriptionInput') || '';
+    let newMovieName = interaction.fields.getTextInputValue('AddMovieNameInput');
+    let newMovieGenre = interaction.fields.getTextInputValue('AddMovieGenreInput');
+    let newMovieDescription = interaction.fields.getTextInputValue('AddMovieDescriptionInput') || '';
     let newMovieImageURL = interaction.fields.getTextInputValue('AddMovieImageInput') || '';
     let newMovieURL = interaction.fields.getTextInputValue('AddMovieURLInput') || '';
+
+    newMovieName = newMovieName.trim();
+    newMovieGenre = newMovieGenre.trim();
+    newMovieDescription = newMovieDescription.trim();
+    newMovieImageURL = newMovieImageURL.trim();
+    newMovieURL = newMovieURL.trim();
 
     if (!isValidHttpUrl(newMovieImageURL)) {
       newMovieImageURL = ''
@@ -103,23 +109,29 @@ module.exports = {
   },
 
   async editMovieModalSubmit(data) {
-    const { interaction, oldMovieName = '' } = { ...data }
+    const { interaction, movieId = '' } = { ...data }
     const guildId = interaction.guild.id;
     let guildProfile = await Guild.findOne({ guildId: guildId });
     if (!guildProfile) {
-      const noticeMessage = `Error adding movie`
-      const { components, embeddedMessage } = await getMoviesMoviePage({ interaction, noticeMessage, oldMovieName })
+      const noticeMessage = `Error updating movie`
+      const { components, embeddedMessage } = await getMoviesMoviePage({ interaction, noticeMessage, movieId })
       return await interaction.update({
         components,
         embeds: embeddedMessage
       })
     }
 
-    const newMovieName = interaction.fields.getTextInputValue('EditMovieNameInput');
-    const newMovieGenre = interaction.fields.getTextInputValue('EditMovieGenreInput');
-    const newMovieDescription = interaction.fields.getTextInputValue('EditMovieDescriptionInput');
+    let newMovieName = interaction.fields.getTextInputValue('EditMovieNameInput');
+    let newMovieGenre = interaction.fields.getTextInputValue('EditMovieGenreInput');
+    let newMovieDescription = interaction.fields.getTextInputValue('EditMovieDescriptionInput');
     let newMovieImageURL = interaction.fields.getTextInputValue('EditMovieImageInput');
     let newMovieURL = interaction.fields.getTextInputValue('EditMovieURLInput');
+
+    newMovieName = newMovieName.trim();
+    newMovieGenre = newMovieGenre.trim();
+    newMovieDescription = newMovieDescription.trim();
+    newMovieImageURL = newMovieImageURL.trim();
+    newMovieURL = newMovieURL.trim();
 
     if (!isValidHttpUrl(newMovieImageURL)) {
       newMovieImageURL = ''
@@ -130,7 +142,7 @@ module.exports = {
 
     if (!newMovieName || !newMovieGenre) {
       const noticeMessage = `Error adding movie: Missing name or genre`
-      const { components, embeddedMessage } = await getMoviesMoviePage({ interaction, noticeMessage, oldMovieName })
+      const { components, embeddedMessage } = await getMoviesMoviePage({ interaction, noticeMessage, movieId })
       return await interaction.update({
         components,
         embeds: embeddedMessage
@@ -139,7 +151,7 @@ module.exports = {
 
     if (NON_ALLOWED_GENRES.includes(newMovieGenre)) {
       const noticeMessage = `Error adding movie: Genre value is not allowed`
-      const { components, embeddedMessage } = await getMoviesMoviePage({ interaction, noticeMessage, oldMovieName })
+      const { components, embeddedMessage } = await getMoviesMoviePage({ interaction, noticeMessage, movieId })
       return await interaction.update({
         components,
         embeds: embeddedMessage
@@ -149,7 +161,7 @@ module.exports = {
     const updatedMoviesData = guildProfile.moviesData
     const movieList = updatedMoviesData.movieList || []
     const movieDetails = movieList.find((movie) => {
-      return movie.name === oldMovieName
+      return movie._id === movieId
     })
 
     movieDetails.name = newMovieName
@@ -170,7 +182,7 @@ module.exports = {
     )
 
     const noticeMessage = `Movie: "${newMovieName}" has been updated`
-    const { components, embeddedMessage } = await getMoviesMoviePage({ interaction, noticeMessage, movieName: newMovieName, selectedGenre: newMovieGenre })
+    const { components, embeddedMessage } = await getMoviesMoviePage({ interaction, noticeMessage, movieId, selectedGenre: newMovieGenre })
 
     await interaction.update({
       components,
