@@ -1,5 +1,6 @@
 const { model, Schema } = require('mongoose');
 const { nanoid } = require('nanoid');
+const { easterHuntSchema } = require('./easterHuntSchema');
 
 
 const movieListSchema = new Schema({
@@ -24,6 +25,7 @@ const moviesDataSchema = new Schema({
 
 const guildSchema = new Schema({
   _id: Schema.Types.ObjectId,
+  easterHunt: easterHuntSchema,
   guildId: String,
   guildName: String,
   moviesData: moviesDataSchema

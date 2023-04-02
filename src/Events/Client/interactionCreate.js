@@ -9,6 +9,7 @@ const {
 const { addMovieModalSubmit, editMovieModalSubmit } = require('../../Movies/MoviesEvents/moviesModalSubmitEvent.js')
 const { genreSelectMenuClicked } = require('../../Movies/MoviesEvents/moviesStringSelectMenuEvent.js')
 const { getMoviesOverviewPage } = require('../../Movies/moviesOverviewPage.js');
+const { changeEventOnOrOffButtonClicked, userInvolveEventButtonClicked } = require('../../SeasonalEvents/SeasonalEventsButtonClicks/seasonalEventButtonClicks');
 
 module.exports = {
   name: Events.InteractionCreate,
@@ -42,9 +43,29 @@ module.exports = {
 }
 
 const buttonClickedEvent = async (interaction) => {
+  // https://discordjs.guide/interactions/modals.html#the-interactioncreate-event
+
+  /********************* Seasonal Events **************************/
+  if (interaction.customId.startsWith('EventJoin')) {
+    const selectedEvent = interaction.customId.split('_')[1]
+    return userInvolveEventButtonClicked({ interaction, isJoining: true, selectedEvent })
+  }
+  if (interaction.customId.startsWith('EventLeave')) {
+    const selectedEvent = interaction.customId.split('_')[1]
+    return userInvolveEventButtonClicked({ interaction, isJoining: false, selectedEvent })
+  }
+  if (interaction.customId.startsWith('StartEvent')) {
+    const selectedEvent = interaction.customId.split('_')[1]
+    return changeEventOnOrOffButtonClicked({ interaction, newState: true, selectedEvent })
+  }
+  if (interaction.customId.startsWith('StopEvent')) {
+    const selectedEvent = interaction.customId.split('_')[1]
+    return changeEventOnOrOffButtonClicked({ interaction, newState: false, selectedEvent })
+  }
+
+  /********************* Movies **************************/
   if (interaction.customId.startsWith('AddMovieButton')) {
     const selectedGenre = interaction.customId.split('_')[1]
-    // https://discordjs.guide/interactions/modals.html#the-interactioncreate-event
     return addMovieButtonClicked({ interaction, selectedGenre })
   }
   if (interaction.customId.startsWith('DeleteMovie')) {

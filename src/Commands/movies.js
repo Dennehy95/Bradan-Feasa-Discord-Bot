@@ -12,8 +12,6 @@ module.exports = {
     //   isEphemeral = interaction.options?._hoistedOptions.find(option => option.name === 'hide').value
     // }
 
-    // console.log(interaction)
-
     const { components, embeddedMessage } = await getMoviesOverviewPage({ interaction })
 
     await interaction.reply({

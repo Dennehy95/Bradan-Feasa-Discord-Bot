@@ -1,7 +1,8 @@
 const { createEmbedMessage } = require('../Utils/discordEmbedUtils.js')
 const Guild = require("../Schemas/guild");
 const mongoose = require("mongoose");
-const constants = require('../Utils/constants')
+const constants = require('../Utils/constants');
+const { generateNewGuildDBEntry } = require('../Utils/discordGuildUtils.js');
 
 const getMovieButtons = (movieList) => {
   const movieButtonComponents = movieList.map((movie) => {
@@ -160,15 +161,7 @@ module.exports = {
     const guildId = guild.id
     let guildProfile = await Guild.findOne({ guildId: guildId });
     if (!guildProfile) {
-      guildProfile = await new Guild({
-        _id: mongoose.Types.ObjectId(),
-        guildId: guildId,
-        guildName: guild.name,
-        moviesData: {
-          genreList: [],
-          movieList: [],
-        }
-      });
+      guildProfile = await generateNewGuildDBEntry(guild)
 
       await guildProfile.save().catch(console.error);
     }
@@ -196,7 +189,7 @@ module.exports = {
     const moviesOnPage = filteredMovieList.slice(moviesListEndIndex - 5, moviesListEndIndex)
 
     const components = getComponentsMoviesOverviewPage({ genreList, movieList: moviesOnPage, pageNumber: updatedPageNumber, totalPages, updatedSelectedGenre })
-    const embedColor = '0xabffcd'
+    const embedColor = '#E91E63'
     const pageNumberText = '\n\u200b\nPage ' + updatedPageNumber + ' of ' + totalPages
     const embedFooter = noticeMessage + pageNumberText || pageNumberText
     const embedImage = null

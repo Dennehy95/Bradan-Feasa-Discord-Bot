@@ -109,7 +109,7 @@ module.exports = {
     }
 
     const components = getComponentsMoviesMoviePage(movieDetails, selectedGenre)
-    const embedColor = '0xabffcd'
+    const embedColor = '#E91E63'
     const embedFooter = noticeMessage || '\u200b'
     const embedImage = movieDetails.imageURL || null
     const fields = getMovieListFields(movieDetails)
