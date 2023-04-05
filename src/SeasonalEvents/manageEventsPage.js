@@ -60,7 +60,7 @@ module.exports = {
     const embedImage = null
     // const fields = getMovieListFields(moviesOnPage)
     const messageTitle = 'Bradán Feasa - Manage Events'
-    let messageDescription = 'Manage events description\n' + 'Easter event is turned on? ' + eventsData.isEventTurnedOn
+    let messageDescription = 'Manage events description\n' + 'Easter event is: ' + eventsData.eventState
 
     const embedThumbnail = null
     const embeddedMessage = createEmbedMessage({ embedColor, embedImage, embedThumbnail, messageDescription, messageTitle })

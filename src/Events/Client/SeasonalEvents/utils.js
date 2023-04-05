@@ -1,3 +1,23 @@
+const { getAllowedChannels } = require("../../../Utils/discordGuildUtils");
+
+const shuffleArray = (array) => {
+  let currentIndex = array.length, temporaryValue, randomIndex
+
+  // While there remain elements to shuffle...
+  while (currentIndex !== 0) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex)
+    currentIndex -= 1
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex]
+    array[currentIndex] = array[randomIndex]
+    array[randomIndex] = temporaryValue
+  }
+
+  return array
+}
 
 module.exports = {
   dateDiffInMS (startDate, endDate) {
@@ -11,5 +31,31 @@ module.exports = {
     // return Math.floor((utc2 - utc1));
 
     return Math.floor((endDate - startDate));
+  },
+
+  getEventChannel ({ client, server }) {
+    const channels = getAllowedChannels({
+      client,
+      server,
+      channelTypes: ['text'],
+    });
+    let eventChannel = channels.find(
+      (channel) => channel.name.toLowerCase() === 'events'
+    );
+    if (!eventChannel) {
+      eventChannel = channels.find(
+        (channel) => channel.name.toLowerCase() === 'general'
+      );
+    }
+    if (!eventChannel) {
+      eventChannel = channels.random();
+    }
+    return eventChannel
+  },
+
+  getSelectedParticipants ({ participants, minimum, maximum }) {
+    const aliveParticipants = participants.filter(participant => participant.isAlive)
+    const count = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum
+    return shuffleArray(aliveParticipants).slice(0, count)
   }
 }

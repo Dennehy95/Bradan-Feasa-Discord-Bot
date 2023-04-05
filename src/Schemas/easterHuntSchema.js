@@ -14,7 +14,6 @@ const { nanoid } = require('nanoid');
 //   },
 // })
 
-
 const evilBunnySchema = new Schema({
   health: { type: Number, required: true }
 })
@@ -29,31 +28,39 @@ const participantsSchema = new Schema({
   },
 })
 
+const occurrenceSchema = new Schema({
+  actions: { type: [String], required: true },
+  eventName: { type: String, required: true },
+  minimumSelectedParticipants: { type: Number },
+  maximumSelectedParticipants: { type: Number },
+  messageDescription: { type: String },
+  messageTitle: { type: String },
+  selectedParticipants: [participantsSchema],
+})
+
+
 /*
 eventState: notStarted, preEvent, inProgress
 */
 
 module.exports = {
   defaultEasterHuntData: {
+    currentOccurrenceIndex: 0,
     evilBunny: { health: 3 },
-    isEventTurnedOn: false,
     eventState: 'notStarted',
+    isEventOver: false,
     participants: [],
-    updated: new Date(),
   },
   easterHuntSchema: new Schema({
-    created: {
-      type: Date,
-      default: Date.now
-    },
+    currentOccurrence: occurrenceSchema,
+    currentOccurrenceEndDate: Date,
+    currentOccurrenceIndex: { type: Number, default: 0, required: true },
+    eventCreatedDate: Date,
     eventState: { type: String, default: 'notStarted', required: true },
     evilBunny: evilBunnySchema,
     eventStartTime: Date,
-    isEventTurnedOn: { type: Boolean, default: false, required: true },
+    isEventOver: Boolean,
+    nextOccurrenceDate: Date,
     participants: [participantsSchema],
-    updated: {
-      type: Date,
-      default: Date.now
-    }
   })
 }

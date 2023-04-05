@@ -56,11 +56,11 @@ const buttonClickedEvent = async (interaction) => {
   }
   if (interaction.customId.startsWith('StartEvent')) {
     const selectedEvent = interaction.customId.split('_')[1]
-    return changeEventOnOrOffButtonClicked({ interaction, newState: true, selectedEvent })
+    return changeEventOnOrOffButtonClicked({ interaction, startingEvent: true, selectedEvent })
   }
   if (interaction.customId.startsWith('StopEvent')) {
     const selectedEvent = interaction.customId.split('_')[1]
-    return changeEventOnOrOffButtonClicked({ interaction, newState: false, selectedEvent })
+    return changeEventOnOrOffButtonClicked({ interaction, startingEvent: false, selectedEvent })
   }
 
   /********************* Movies **************************/
