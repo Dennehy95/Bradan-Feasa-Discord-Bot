@@ -1,6 +1,22 @@
+const DEFAULT_EASTER_HUNT_HUNTING_OCCURRENCE_ACTIONS = [
+  {
+    id: 0,
+    label: 'Go on the Hunt',
+    name: 'goOnHunt'
+  }, {
+    id: 1,
+    label: 'Hide',
+    name: 'hide'
+  }, {
+    id: 2,
+    label: 'Trick Other Hunters',
+    name: 'trickOtherHunters'
+  }
+];
+
 module.exports = {
   DEFAULT_EASTER_HUNT_HUNTING_OCCURRENCE: {
-    actions: ['goHunt', 'goHide'],
+    actions: DEFAULT_EASTER_HUNT_HUNTING_OCCURRENCE_ACTIONS,
     eventName: 'Hunting Party',
     minimumSelectedParticipants: 1,
     maximumSelectedParticipants: 4,

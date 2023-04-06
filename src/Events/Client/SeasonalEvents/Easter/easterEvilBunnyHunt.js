@@ -118,7 +118,7 @@ const doEasterEventForServer = async ({ client, server }) => {
         }
         // If past occurrenceTime and we are awaiting an occurrence response, generate response and post, then set
         // awaitingResponseToOccurrence to false, increment currentOccurrenceIndex and get time to next event
-        updatedEventData = await easterEvilBunnyHuntOccurrenceOutcomes({ eventChannel, updatedEventData })
+        updatedEventData = await easterEvilBunnyHuntOccurrenceOutcomes({ eventChannel, guildId: server.id, updatedEventData })
         //TODO do event and gets new data info then update updatedEventData
       }
       if (updatedEventData.nextOccurrenceDate) {
@@ -153,6 +153,7 @@ const doEasterEventForServer = async ({ client, server }) => {
         updatedEventData.currentOccurrence = DEFAULT_EASTER_HUNT_HUNTING_OCCURRENCE
         updatedEventData.currentOccurrence.selectedParticipants = getSelectedParticipants({ participants: updatedEventData.participants, minimum: updatedEventData.currentOccurrence.minimumSelectedParticipants, maximum: updatedEventData.currentOccurrence.maximumSelectedParticipants })
       }
+      console.log(updatedEventData)
 
       const { components, embeddedMessage } = await getEasterHuntOccurrencePage({
         currentOccurrence: updatedEventData.currentOccurrence,

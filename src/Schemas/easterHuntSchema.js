@@ -28,8 +28,14 @@ const participantsSchema = new Schema({
   },
 })
 
+const actionSchema = new Schema({
+  id: { type: Number, required: true },
+  label: { type: String, required: true },
+  name: { type: String, required: true },
+})
+
 const occurrenceSchema = new Schema({
-  actions: { type: [String], required: true },
+  actions: [actionSchema],
   eventName: { type: String, required: true },
   minimumSelectedParticipants: { type: Number },
   maximumSelectedParticipants: { type: Number },
@@ -45,6 +51,7 @@ eventState: notStarted, preEvent, inProgress
 
 module.exports = {
   defaultEasterHuntData: {
+    currentOccurrence: {},
     currentOccurrenceIndex: 0,
     evilBunny: { health: 3 },
     eventState: 'notStarted',
