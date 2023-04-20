@@ -44,7 +44,6 @@ module.exports = {
         { $set: { [selectedEvent]: updatedEventData } }
       )
 
-
       await doEasterEvilBunnyHunt({ client: interaction.client, server: guild })
 
       const eventChannel = getEventChannel({ client: interaction.client, server: guild })

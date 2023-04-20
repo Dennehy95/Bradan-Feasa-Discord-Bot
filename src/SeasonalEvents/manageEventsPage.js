@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const constants = require('../Utils/constants');
 const { generateNewGuildDBEntry } = require('../Utils/discordGuildUtils.js');
 const { defaultEasterHuntData } = require('../Schemas/easterHuntSchema.js');
+const { EVENT_STATE_ENUMS } = require('../Utils/constants');
 
 const getComponentsManageEventsPage = () => {
   const eventActivateButton = {
@@ -45,7 +46,7 @@ module.exports = {
     }
 
     //TODO
-    // GENERATE ALl event sif not yet created (maybe do somewhere else...?)
+    // GENERATE ALl events if not yet created (maybe do somewhere else...?)
     if (!guildProfile.easterHunt) {
       await Guild.updateOne(
         { _id: guildProfile._id },
@@ -58,12 +59,16 @@ module.exports = {
     const components = getComponentsManageEventsPage(eventsData)
     const embedColor = '#1ABC9C'
     const embedImage = null
-    // const fields = getMovieListFields(moviesOnPage)
     const messageTitle = 'Bradán Feasa - Manage Events'
-    let messageDescription = 'Manage events description\n' + 'Easter event is: ' + eventsData.eventState
+    // let messageDescription = 'Easter Hunt event is: ' + EVENT_STATE_ENUMS[eventsData.eventState]
+    let messageDescription = ' '
+    const fields = {
+      name: `Event Name: Evil Bunny Hunt`,
+      value: `Event is: ${EVENT_STATE_ENUMS[eventsData.eventState]}`
+    }
 
     const embedThumbnail = null
-    const embeddedMessage = createEmbedMessage({ embedColor, embedImage, embedThumbnail, messageDescription, messageTitle })
+    const embeddedMessage = createEmbedMessage({ embedColor, embedImage, embedThumbnail, fields, messageDescription, messageTitle })
     return { components, embeddedMessage }
   }
 }

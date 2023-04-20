@@ -57,5 +57,9 @@ module.exports = {
     const aliveParticipants = participants.filter(participant => participant.isAlive)
     const count = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum
     return shuffleArray(aliveParticipants).slice(0, count)
+  },
+
+  rollD20 (difficultyModifier = 0) {
+    return Math.floor(Math.random() * 20) + 1 + difficultyModifier;
   }
 }

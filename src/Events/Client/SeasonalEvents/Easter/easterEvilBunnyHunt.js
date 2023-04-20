@@ -1,12 +1,13 @@
+const { defaultEasterHuntData } = require('../../../../Schemas/easterHuntSchema');
 const Guild = require('../../../../Schemas/guild');
 const {
-  getEasterHuntOverviewPage,
-} = require('../../../../SeasonalEvents/easterHuntOverviewPage');
+  getEasterHuntEventOutcomePage,
+} = require('../../../../SeasonalEvents/getEasterHuntEventOutcomePage');
 const { getEasterHuntStartedPage } = require('../../../../SeasonalEvents/easterHuntStartedPage');
 const { getEasterHuntOccurrencePage } = require('../../../../SeasonalEvents/getEasterHuntOccurrencePage');
 const { dateDiffInMS, getEventChannel, getSelectedParticipants } = require('../utils');
-const { DEFAULT_EASTER_HUNT_HUNTING_OCCURRENCE } = require('./easterEvilBunnyOccurrencesConstants');
-const { easterEvilBunnyHuntOccurrenceOutcomes } = require('./easterEvilBunnyHuntOccurrenceOutcomes');
+const { easterEvilBunnyHuntOccurrenceOutcomes } = require('./evilBunnyOccurrences/easterEvilBunnyHuntOccurrenceOutcomes');
+const { DEFAULT_OCCURRENCES } = require('./evilBunnyOccurrences/easterEvilBunnyOccurrencesConstants');
 
 const generateMsWaitTimes = () => {
   // const minMilliseconds = 60 * 60 * 2000; // 2 hour in milliseconds
@@ -22,6 +23,19 @@ const generateMsWaitTimes = () => {
   console.log('Next occurrence in ' + msToNextOccurrence + ' milliseconds');
 
   return { msToEndOfCurrentEvent, msToNextOccurrence }
+}
+
+const noParticipantsEventStart = async ({ eventChannel, guildId, guildProfileId }) => {
+  const occurrenceDescription = 'No one enlisted to fight the Bunny, the town is unprotected and is destroyed\n'
+  const { embeddedMessage } = await getEasterHuntEventOutcomePage({ guildId, occurrenceDescription })
+  await Guild.updateOne(
+    { _id: guildProfileId },
+    { $set: { easterHunt: defaultEasterHuntData } }
+  )
+  return await eventChannel.send({
+    embeds: embeddedMessage,
+    ephemeral: false,
+  })
 }
 
 const getActiveEventServers = async (client) => {
@@ -52,6 +66,15 @@ const doEasterEventForServer = async ({ client, server }) => {
   const eventChannel = getEventChannel({ client, server })
   const currentDate = new Date();
 
+  if (updatedEventData.isEventOver) {
+    // TODO
+    // Show end screen
+    return await Guild.updateOne(
+      { _id: guildProfile._id },
+      { $set: { easterHunt: defaultEasterHuntData } }
+    )
+  }
+
   if (
     !(
       updatedEventData.eventState === 'preEvent' ||
@@ -59,11 +82,13 @@ const doEasterEventForServer = async ({ client, server }) => {
     )
   )
     return;
+
   // Event is ongoing
   // - If notStarted, set to preEvent, post initial message and schedule a call for 48 hours from then
   // - if preEvent, check we are before created start time (the 24 hours) if no wait until then, if yes, set to in progress
   // - If eventState is inProgress, trigger an event occurrence
   else {
+    const aliveParticipants = updatedEventData.participants.filter(participant => participant.isAlive)
     if (updatedEventData.eventState === 'preEvent') {
       const timeToEventStart = dateDiffInMS(
         currentDate,
@@ -72,17 +97,19 @@ const doEasterEventForServer = async ({ client, server }) => {
       console.log('WE ARE IN PRE-EVENT')
       console.log('timeToEventStart = ' + timeToEventStart)
       if (timeToEventStart > 0) {
-        return setTimeout(
-          doEasterEventForServer.bind(null, { client, server }),
-          timeToEventStart + 1000
-        );
+        await new Promise(resolve => setTimeout(resolve, timeToEventStart + 1000));
+        return await doEasterEventForServer({ client, server });
       }
-      console.log('SETTING IN PROGRESS')
+      console.log('SETTING IN PROGRESS If has participants')
+      if (aliveParticipants.length === 0) {
+        return noParticipantsEventStart({ eventChannel, guildId, guildProfileId: guildProfile._id })
+      }
+
       updatedEventData.eventState = 'inProgress';
 
       const { msToEndOfCurrentEvent, msToNextOccurrence } = generateMsWaitTimes()
-      updatedEventData.msToEndOfCurrentEvent = msToNextOccurrence;
-      updatedEventData.nextOccurrenceDate = msToNextOccurrence;
+      updatedEventData.currentOccurrenceEndDate = Math.floor(currentDate) + msToEndOfCurrentEvent;
+      updatedEventData.nextOccurrenceDate = Math.floor(currentDate) + msToNextOccurrence;
 
       await Guild.updateOne(
         { _id: guildProfile._id },
@@ -98,11 +125,10 @@ const doEasterEventForServer = async ({ client, server }) => {
         embeds: embeddedMessage,
       });
 
-      return setTimeout(
-        doEasterEventForServer.bind(null, { client, server }),
-        msToEndOfCurrentEvent + 1000
-      );
+      await new Promise(resolve => setTimeout(resolve, msToEndOfCurrentEvent + 1000));
+      return await doEasterEventForServer({ client, server });
     }
+
 
     else if (updatedEventData.eventState === 'inProgress') {
       if (updatedEventData.currentOccurrenceEndDate) {
@@ -111,50 +137,39 @@ const doEasterEventForServer = async ({ client, server }) => {
           updatedEventData.currentOccurrenceEndDate
         );
         if (timeToOccurrenceEnd > 0) {
-          return setTimeout(
-            doEasterEventForServer.bind(null, { client, server }),
-            timeToOccurrenceEnd + 500
-          );
+          await new Promise(resolve => setTimeout(resolve, timeToOccurrenceEnd + 500));
+          return await doEasterEventForServer({ client, server });
         }
+
         // If past occurrenceTime and we are awaiting an occurrence response, generate response and post, then set
         // awaitingResponseToOccurrence to false, increment currentOccurrenceIndex and get time to next event
         updatedEventData = await easterEvilBunnyHuntOccurrenceOutcomes({ eventChannel, guildId: server.id, updatedEventData })
         //TODO do event and gets new data info then update updatedEventData
       }
+
       if (updatedEventData.nextOccurrenceDate) {
         const timeToNextOccurrence = dateDiffInMS(
           currentDate,
           updatedEventData.nextOccurrenceDate
         );
         if (timeToNextOccurrence > 0) {
-          return setTimeout(
-            doEasterEventForServer.bind(null, { client, server }),
-            timeToNextOccurrence + 10000 // To allow a gap if we just ended a non responded event
-          );
+          await new Promise(resolve => setTimeout(resolve, timeToNextOccurrence + 500));
+          return await doEasterEventForServer({ client, server });
         }
       }
 
-      // if (updatedEventData.isEventOver) {
-      //   //MEssage final screen, reset date to default
-      //   return
-      // }
-
-      //TODO
-      // DO OCCURRENCE
-      // getOccurrence - uses guild data to post message pinging people, or saying bunny attacked. Place currentOccurrenceIndex in the customId
-      // updatedEventData.awaitingResponseToOccurrence = true, button interact later should reset updatedEventData.currentOccurrenceEndDate
-      // IMPORTANT only allow events if they match the current index AND then message they are done from was created AFTER the current event was created
-
       // TODO
-      // Instead of numbers have this select the schema object ranodmly. We need to also check special rules to filter which events are available. For example if only one person left cant do buddy save etc. 
-      // const randomlySelectedOccurrenceIndex = Math.floor(Math.random() * (3 - 1 + 1) + 1) // 1 to 3
-      const randomlySelectedOccurrenceIndex = Math.floor(Math.random() * (1 - 1 + 1) + 1) // 1 to 3
-      if (randomlySelectedOccurrenceIndex === 1) {
-        updatedEventData.currentOccurrence = DEFAULT_EASTER_HUNT_HUNTING_OCCURRENCE
-        updatedEventData.currentOccurrence.selectedParticipants = getSelectedParticipants({ participants: updatedEventData.participants, minimum: updatedEventData.currentOccurrence.minimumSelectedParticipants, maximum: updatedEventData.currentOccurrence.maximumSelectedParticipants })
-      }
-      console.log(updatedEventData)
+      // Instead of numbers have this select the schema object randomly. We need to also check special rules to filter which events are available. For example if only one person left cant do buddy save etc. 
+      const numberOfAliveParticipants = updatedEventData.participants.filter((participant) => participant.isAlive).length
+      const availableOccurrences = Object.keys(DEFAULT_OCCURRENCES)
+        .filter((occurrence) => DEFAULT_OCCURRENCES[occurrence].minimumSelectedParticipants <= numberOfAliveParticipants);
+      const randomOccurrence = availableOccurrences[Math.floor(Math.random() * availableOccurrences.length)];
+      updatedEventData.currentOccurrence = DEFAULT_OCCURRENCES[randomOccurrence];
+      console.log(randomOccurrence)
+      console.log(updatedEventData.currentOccurrence)
+      updatedEventData.currentOccurrence.selectedParticipants = getSelectedParticipants({ participants: updatedEventData.participants, minimum: updatedEventData.currentOccurrence.minimumSelectedParticipants, maximum: updatedEventData.currentOccurrence.maximumSelectedParticipants })
 
+      console.log(updatedEventData)
       const { components, embeddedMessage } = await getEasterHuntOccurrencePage({
         currentOccurrence: updatedEventData.currentOccurrence,
         currentOccurrenceIndex: updatedEventData.currentOccurrenceIndex,
@@ -168,8 +183,8 @@ const doEasterEventForServer = async ({ client, server }) => {
       });
 
       const { msToEndOfCurrentEvent, msToNextOccurrence } = generateMsWaitTimes()
-      updatedEventData.currentOccurrenceEndDate = msToEndOfCurrentEvent;
-      updatedEventData.nextOccurrenceDate = msToNextOccurrence;
+      updatedEventData.currentOccurrenceEndDate = Math.floor(currentDate) + msToEndOfCurrentEvent;
+      updatedEventData.nextOccurrenceDate = Math.floor(currentDate) + msToNextOccurrence;
 
 
       await Guild.updateOne(
@@ -177,10 +192,8 @@ const doEasterEventForServer = async ({ client, server }) => {
         { $set: { easterHunt: updatedEventData } }
       );
 
-      return setTimeout(
-        doEasterEventForServer.bind(null, { client, server }),
-        msToEndOfCurrentEvent + 1000
-      );
+      await new Promise(resolve => setTimeout(resolve, msToEndOfCurrentEvent + 500));
+      return await doEasterEventForServer({ client, server });
     }
   }
 };

@@ -10,7 +10,7 @@ const { addMovieModalSubmit, editMovieModalSubmit } = require('../../Movies/Movi
 const { genreSelectMenuClicked } = require('../../Movies/MoviesEvents/moviesStringSelectMenuEvent.js')
 const { getMoviesOverviewPage } = require('../../Movies/moviesOverviewPage.js');
 const { changeEventOnOrOffButtonClicked, userInvolveEventButtonClicked } = require('../../SeasonalEvents/SeasonalEventsButtonClicks/seasonalEventButtonClicks');
-const { easterEvilBunnyHuntOccurrenceOutcomes } = require('./SeasonalEvents/Easter/easterEvilBunnyHuntOccurrenceOutcomes');
+const { easterEvilBunnyHuntOccurrenceOutcomes } = require('./SeasonalEvents/Easter/evilBunnyOccurrences/easterEvilBunnyHuntOccurrenceOutcomes');
 
 module.exports = {
   name: Events.InteractionCreate,
@@ -65,10 +65,9 @@ const buttonClickedEvent = async (interaction) => {
   }
 
   if (interaction.customId.startsWith('easterHuntAction')) {
-    const occurrenceIndex = interaction.customId.split('_')[1]
-    const actionId = interaction.customId.split('_')[2]
-    //eventChannel, updatedEventData
-    return easterEvilBunnyHuntOccurrenceOutcomes({ buttonClickInfo: { actionId, messageCreatedTimestamp: interaction.message.createdTimestamp, occurrenceIndex, userId: interaction.user.id }, eventChannel: interaction.channel })
+    const occurrenceIndex = parseInt(interaction.customId.split('_')[1])
+    const actionId = parseInt(interaction.customId.split('_')[2])
+    return easterEvilBunnyHuntOccurrenceOutcomes({ buttonClickInfo: { actionId, messageCreatedTimestamp: interaction.message.createdTimestamp, interaction, occurrenceIndex, userId: interaction.user.id }, eventChannel: interaction.channel, guildId: interaction.guildId })
   }
 
   /********************* Movies **************************/

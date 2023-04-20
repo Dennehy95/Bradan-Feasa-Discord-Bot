@@ -1,25 +1,30 @@
 const Guild = require("../Schemas/guild");
 const { createEmbedMessage } = require("../Utils/discordEmbedUtils");
 
-// MAybe instead of creating a buttons et for each event, we create a schema in the DB. it stores an 
-// occurrence object which has the buttons and users listed as well as the type of event and any extra permutations and things
-// Then if a call with a button with the correct index is called we take the action and increment the index, no longer wait and return message
 const getComponentsEasterHuntOccurrencePage = ({ currentOccurrence, currentOccurrenceIndex }) => {
-  let componentsContainer = [{
-    "type": 1,
-    "components": []
-  }]
-  // console.log(currentOccurrence)
-  componentsContainer[0].components = currentOccurrence.actions.map((action) => {
-    return {
-      "custom_id": `easterHuntAction_${currentOccurrenceIndex}_${action.id}`,
-      "disabled": false,
-      "label": action.label,
-      "style": 1,
-      "type": 2
+  let componentsContainer;
+  if (currentOccurrence?.actions?.length > 0) {
+    componentsContainer = [];
+    const actionChunks = [];
+    for (let i = 0; i < currentOccurrence.actions.length && i < 25; i += 5) {
+      const chunk = currentOccurrence.actions.slice(i, i + 5);
+      actionChunks.push(chunk);
     }
-  })
-  console.log(componentsContainer)
+    componentsContainer = actionChunks.map((chunk) => {
+      return {
+        "type": 1,
+        "components": chunk.map((action) => {
+          return {
+            "custom_id": `easterHuntAction_${currentOccurrenceIndex}_${action.id}`,
+            "disabled": false,
+            "label": action.label,
+            "style": 1,
+            "type": 2
+          };
+        })
+      };
+    });
+  }
   return componentsContainer
 }
 
@@ -31,13 +36,10 @@ module.exports = {
     const components = getComponentsEasterHuntOccurrencePage({ currentOccurrence, currentOccurrenceIndex })
     const embedColor = '#1ABC9C'
     const messageTitle = currentOccurrence.messageTitle
-    let messageDescription = currentOccurrence.messageDescription
-    // TODO
-    // If no one, end event
-
-    // guildProfile.easterHunt?.participants.forEach(participant => messageDescription += '\n' + '<@' + participant.id + '>')
-    guildProfile.easterHunt?.participants.forEach(participant => messageDescription += '\n' + `<@${participant.userId}>`)
-
+    let messageDescription = currentOccurrence.messageDescription || ''
+    guildProfile.easterHunt?.participants.forEach(participant => {
+      messageDescription += `\n<@${participant.userId}>`
+    })
 
     const embeddedMessage = createEmbedMessage({ embedColor, messageDescription, messageTitle })
     return { components, embeddedMessage }

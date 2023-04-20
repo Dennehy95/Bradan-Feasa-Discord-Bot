@@ -1,0 +1,110 @@
+const DEFAULT_EASTER_HUNT_HUNTING_OCCURRENCE_ACTIONS = [
+  {
+    id: 0,
+    label: 'Go on the Hunt',
+    name: 'goOnHunt',
+  },
+  {
+    id: 1,
+    label: 'Hide',
+    name: 'hide',
+  },
+  {
+    id: 2,
+    label: 'Trick Other Hunters',
+    name: 'trickOtherHunters',
+  },
+];
+
+module.exports = {
+  BUNNY_ATTACKS: [
+    `With lightning speed, the bunny hopped towards {USERNAME}, razor-sharp eggs flying in all directions.`,
+    `The bunny hops towards {USERNAME}, its beady eyes glowing with malevolence as it strikes with its sharp claws!`,
+    `A terrifying cackle filled the air as the bunny launched an onslaught of colorful but deadly eggs, each one containing a vicious surprise for {USERNAME}.`,
+    `The bunny's fluffy exterior belied his sinister intentions, as he bounded towards {USERNAME}, teeth bared and ready to strike.`,
+    `With a sinister grin, the bunny releases a barrage of Easter eggs in {USERNAME}'s direction, each one exploding on impact!`,
+    `As the bunny hopped closer, his eyes began to glow an eerie shade of green, and tendrils of dark energy crackled around him, signaling the beginning of his devastating attack on {USERNAME}.`,
+    `The bunny lunges forward, its fluffy ears flat against its head as its razor-sharp teeth sink into {USERNAME}'s arm!`,
+    `Suddenly, the bunny's adorable face twists into a maniacal grin as it unleashes a flurry of kicks and punches at {USERNAME}!`,
+    `With a high-pitched shriek, the bunny launches itself at {USERNAME}, its massive jaws gaping wide open in a bloodthirsty snarl!`,
+    `As {USERNAME} turns to run, the bunny starts to grow in size, its eyes glowing an eerie red as it charges towards them with deadly intent!`,
+    `With a sinister grin, the bunny releases a barrage of Easter eggs in {USERNAME}'s direction, each one exploding on impact!`,
+    `{USERNAME} hears a rustling behind them, and turns just in time to see the bunny hurtling towards them, claws extended!`,
+    `As the bunny closes in on {USERNAME}, they notice a wicked gleam in its eye, and realize too late that they are in serious danger.`,
+    `{USERNAME} tries to dodge the bunny's attacks, but it moves with surprising agility, its razor-sharp claws leaving deep gouges in the ground.`,
+    `Suddenly, the air is filled with a deafening clucking sound, as the bunny charges towards {USERNAME} with a fierce determination in its eyes.`,
+  ],
+  DEFAULT_OCCURRENCES: {
+    'ambush': {
+      occurrenceName: 'ambush',
+      minimumSelectedParticipants: 1,
+      maximumSelectedParticipants: 4,
+      messageDescription:
+        'Suddenly the Bunny bursts from the bushes and begins attacking some unsuspecting victims!\n',
+      messageTitle: "Bradán Feasa - Easter 'Evil Bunny' - Ambush!",
+      selectedParticipants: [],
+    },
+    'huntingParty': {
+      actions: DEFAULT_EASTER_HUNT_HUNTING_OCCURRENCE_ACTIONS,
+      occurrenceName: 'huntingParty',
+      minimumSelectedParticipants: 2,
+      maximumSelectedParticipants: 4,
+      messageDescription:
+        'The King has chosen you to lead a hunt for the Evil Bunny. What will you do?\n',
+      messageTitle: "Bradán Feasa - Easter 'Evil Bunny' - Time to Hunt!",
+      selectedParticipants: [],
+    },
+  },
+  PARTICIPANT_ATTACKS: [
+    `{USERNAME} pulled out a secret weapon: a basket of rotten eggs that they hurled at the Bunny, causing it to gag and stumble back.`,
+    `{USERNAME} performed a series of impressive cartwheels and backflips, then landed a devastating kick to the Bunny's midsection.`,
+    `{USERNAME} whipped out a pair of bunny ears and placed them on their head, luring the Bunny in with a seductive dance. Just as it got close, {USERNAME} kicked it in the face.`,
+    `{USERNAME} pulled out a carrot that had been sharpened to a point, then charged at the Bunny with all their might, impaling it.`,
+    `{USERNAME} threw a handful of chocolate eggs at the Bunny's feet, causing it to slip and fall, then gave it a swift stomp to the head.`,
+    `{USERNAME} played a high-pitched whistle that only rabbits could hear, causing the Bunny to run straight into a nearby trap.`,
+    `{USERNAME} held up a mirror, blinding the Bunny with its own reflection, then took advantage of its confusion to deliver a cheap punch.`,
+    `{USERNAME} seductively swayed their hips to the Bunny's favorite song, hypnotizing it into a trance. They then dealt a crushing blow with a well-placed karate chop.`,
+    `{USERNAME} quickly constructed a makeshift slingshot and fired a hard-boiled egg straight into the Bunny's mouth, choking it and causing it to vomit acid all over the surrounding area.`,
+    `{USERNAME} sprayed the Bunny with a water gun, causing its fur to mat and stick together.`,
+    `{USERNAME} threw a handful of glitter in the Bunny's face, blinding it and making it sneeze uncontrollably.`,
+    `{USERNAME} donned a pair of bunny slippers and hopped around in circles, confusing the Bunny and leaving it dizzy.`,
+    `{USERNAME} revealed a giant carrot that had been sharpened like a sword, slicing through the Bunny's defenses.`,
+    `{USERNAME} pulled out a rubber chicken and whacked the Bunny on the head, stunning it momentarily.`,
+    `{USERNAME} created a decoy Bunny out of chocolate and set it out as bait. When the real Bunny went in for a bite, {USERNAME} pounced kicking it square in it's bouncy boinkers.`,
+    `{USERNAME} produced a pair of giant scissors and snipped off the Bunny's tail, leaving it humiliated.`,
+    `{USERNAME} chanted an ancient spell, causing the Bunny to become trapped in a vortex of swirling flowers.`,
+    `{USERNAME} fashioned a set of boxing gloves out of Easter eggs and pummeled the Bunny with a flurry of punches.`
+  ],
+  PARTICIPANT_DEATH_MESSAGES:
+    [
+      `{USERNAME} stumbles backwards as the bunny's massive paw connects with their chest, knocking them to the ground and leaving them gasping for air. A final swipe and {USERNAME} is no more`,
+      `With a sickening crunch, the bunny's teeth sink into {USERNAME}'s shoulder, tearing through flesh and muscle with terrifying ease. {USERNAME} lies in pieces on the ground`,
+      `{USERNAME} tries to dodge the bunny's attacks, but its movements are too fast and too unpredictable, and they are soon backed into a corner with no escape. {USERNAME} tries swinging their blade at the creature but it is futile and {USERNAME} is decimated.`,
+      `The bunny's relentless assault leaves {USERNAME} bruised and battered, their strength faltering as they struggle to stay on their feet. {USERNAME} shouts at the Bunny 'Come and get me, you floppy eared pheasant!' and the Bunny duly obliges, sending {USERNAME}'s head 50 meters in the sky with a single swipe`,
+      `Despite their best efforts, {USERNAME} is no match for the bunny's incredible strength and agility, and they are quickly overwhelmed by its devastating attacks and are quickly defeated.`,
+      `{USERNAME} pees themselves, then straight up dies lmao`,
+      `With a final blow, the evil Easter Bunny vanquishes {USERNAME}, leaving them lying motionless on the ground.`,
+      `Despite their best efforts, {USERNAME} was no match for the wicked Bunny's relentless onslaught, and they fell to the ground defeated and broken.`,
+      `{USERNAME} fought bravely against the evil Easter Bunny, but in the end they were simply no match for its fearsome power.`,
+      `As {USERNAME} falls to the ground, defeated and exhausted, the evil Easter Bunny cackles triumphantly, reveling in its victory.`,
+      `With a swift kick to {USERNAME}'s stomach, the evil Easter Bunny sends them flying backwards, defeated and helpless.`,
+      `As the dust settles, {USERNAME} looks up to see the evil Easter Bunny, ears twitching with satisfaction, standing over them. The Bunny raises it's paw, then everything goes dark`,
+      `{USERNAME} lies defeated on the ground, humiliated by the vicious tricks and traps of the evil Easter Bunny.`,
+      `The evil Easter Bunny stands triumphantly over {USERNAME}, holding up their bunny paw in victory as they revel in their opponent's defeat.`,
+      `With a cruel smirk, the evil Easter Bunny delivers the final blow to {USERNAME}, leaving them crumpled on the ground.`,
+      `{USERNAME} feels the weight of defeat as the evil Easter Bunny taunts them, shaking its fluffy tail in a smug victory dance. The final thing {USERNAME} sees in the evil Bunny taking a cute bite out of their severed leg.`
+    ],
+  PARTICIPANT_ESCAPE_MESSAGES: [
+    `With a fierce determination, the evil Easter Bunny chased after {USERNAME}, but {USERNAME} managed to stay one step ahead and narrowly escaped its grasp!`,
+    `As the evil Easter Bunny closed in, {USERNAME} scrambled up a nearby tree and managed to get out of reach just in the nick of time!`,
+    `With a burst of speed, {USERNAME} managed to evade the deadly Easter Bunny's attacks and dashed away to safety!`,
+    `As the evil Easter Bunny lunged forward, {USERNAME} stumbled but quickly regained their balance and managed to dodge its deadly claws, allowing them to escape unharmed!`,
+    `With sweat pouring down their face, {USERNAME} narrowly avoided the evil Easter Bunny's razor-sharp eggs and managed to make a daring escape!`,
+    `{USERNAME} barely manages to dodge the bunny's claws, scrambling to safety just in time!`,
+    `With the bunny hot on {USERNAME}'s tail, they manage to leap over a fallen tree, barely escaping its grasp!`,
+    `As the bunny closes in, {USERNAME} sees a nearby river and dives in, barely avoiding its razor-sharp teeth!`,
+    `With a final burst of speed, {USERNAME} sprints away from the bunny, narrowly avoiding its final lunge!`,
+    `Just as the bunny is about to strike, {USERNAME} grabs a nearby branch and uses it to vault to safety, escaping just in time!`,
+  ],
+
+};

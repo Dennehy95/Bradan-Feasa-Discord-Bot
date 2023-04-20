@@ -36,11 +36,11 @@ const actionSchema = new Schema({
 
 const occurrenceSchema = new Schema({
   actions: [actionSchema],
-  eventName: { type: String, required: true },
   minimumSelectedParticipants: { type: Number },
   maximumSelectedParticipants: { type: Number },
   messageDescription: { type: String },
   messageTitle: { type: String },
+  occurrenceName: { type: String, required: true },
   selectedParticipants: [participantsSchema],
 })
 
