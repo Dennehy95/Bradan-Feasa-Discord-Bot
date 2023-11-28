@@ -17,7 +17,7 @@
     "deploy-commands-global:prod": "NODE_ENV=prod node deploy-commands-global.js",
     "start:dev": "NODE_ENV=dev node ./app.js",
     "start:prod": "NODE_ENV=prod node ./app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -29,5 +29,9 @@
   "bugs": {
     "url": "https://github.com/Dennehy95/Bradan-Feasa-Discord-Bot/issues"
   },
-  "homepage": "https://github.com/Dennehy95/Bradan-Feasa-Discord-Bot#readme"
+  "homepage": "https://github.com/Dennehy95/Bradan-Feasa-Discord-Bot#readme",
+  "devDependencies": {
+    "jest": "^29.5.0",
+    "mongodb-memory-server": "^8.12.2"
+  }
 }

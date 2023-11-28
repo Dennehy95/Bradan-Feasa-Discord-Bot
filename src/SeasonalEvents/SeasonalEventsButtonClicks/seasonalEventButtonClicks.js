@@ -5,6 +5,16 @@ const Guild = require("../../Schemas/guild");
 const { getEasterHuntOverviewPage } = require("../easterHuntOverviewPage");
 const { getManageEventsPage } = require("../manageEventsPage")
 
+const getTimeToEasterEvent = () => {
+  const now = new Date();
+  return {
+    // timeToEvent: new Date(now.getTime() + 24 * 60 * 60 * 1000).getTime(), // 24 Hours
+    // timeToEventText: '24 Hours'
+    timeToEvent: new Date(now.getTime() + 60000).getTime(),
+    timeToEventText: '1 minute', // one minute test
+  }
+};
+
 module.exports = {
   async changeEventOnOrOffButtonClicked (data) {
     const { interaction, startingEvent = false, selectedEvent } = { ...data }
@@ -18,7 +28,6 @@ module.exports = {
     if (!startingEvent) {
 
       updatedEventData = structuredClone(defaultEasterHuntData)
-      console.log(updatedEventData)
       await Guild.updateOne(
         { _id: guildProfile._id },
         { $set: { [selectedEvent]: updatedEventData } }
@@ -26,7 +35,7 @@ module.exports = {
     } else {
       if (updatedEventData.eventState === 'preEvent' || updatedEventData.eventState === 'inProgress') {
         return await interaction.reply({
-          content: 'Event already in progress. Please stopt he current event before starting a new one',
+          content: 'Event already in progress. Please stop he current event before starting a new one',
           ephemeral: true,
         })
       }
@@ -34,11 +43,9 @@ module.exports = {
       // Reset to defaults, set preEvent event state and time 24 hours from now
       updatedEventData = structuredClone(defaultEasterHuntData)
       updatedEventData.eventState = 'preEvent'
-      const now = new Date();
-      // const oneDayFromNow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-      const oneDayFromNow = new Date(now.getTime() + 60000); // one minute test
-      const oneDayFromNowInMs = oneDayFromNow.getTime();
-      updatedEventData.eventStartTime = oneDayFromNowInMs
+      const timeToEventStart = getTimeToEasterEvent()
+      updatedEventData.eventStartTime = timeToEventStart.timeToEvent
+      updatedEventData.eventStartTimeText = timeToEventStart.timeToEventText
       await Guild.updateOne(
         { _id: guildProfile._id },
         { $set: { [selectedEvent]: updatedEventData } }
@@ -66,6 +73,7 @@ module.exports = {
   },
 
   async userInvolveEventButtonClicked (data) {
+    console.log('here')
     const { interaction, isJoining = false, selectedEvent } = { ...data }
     const guild = interaction.guild
     const guildId = guild.id
@@ -76,10 +84,10 @@ module.exports = {
     const updatedEventData = guildProfile[selectedEvent]
     let participants = updatedEventData.participants
 
-    console.log(updatedEventData)
     if (updatedEventData.eventState !== 'preEvent') return
 
     if (isJoining) {
+      console.log('HERHE')
       if (updatedEventData.eventState === 'notStarted' || updatedEventData.eventState === 'inProgress') return //Can't join a not started or in progress event
       if (updatedEventData.eventState === 'preEvent') {
         if (!participants.find((participant) => participant.userId === interaction.user.id)) {

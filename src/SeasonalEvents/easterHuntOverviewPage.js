@@ -40,11 +40,12 @@ module.exports = {
     const embedColor = '#1ABC9C'
     const messageTitle = "Bradán Feasa - Easter 'Evil Bunny' Hunt"
 
-    let messageDescription = 'The King has received troubling news. The Evil Easter Bunny has escaped and is wreaking havoc upon the land. He is looking for volunteers to enlist to fight against the Evil Bunny. It will be dangerous, but we must stop it before it kills us all! You have 24 hours to decide to join the fight!'
+    let messageDescription = `The King has received troubling news. The Evil Easter Bunny has escaped and is wreaking havoc upon the land. He is looking for volunteers to enlist to fight against the Evil Bunny. It will be dangerous, but we must stop it before it kills us all! You have ${guildProfile.easterHunt?.eventStartTimeText} to decide if you will join the fight!`
 
-    guildProfile.easterHunt?.participants.forEach(participant => messageDescription += '\n' + participant.username)
+    const fields = []
+    guildProfile.easterHunt?.participants.forEach(participant => fields.push({ name: participant.username, value: ' ' }))
 
-    const embeddedMessage = createEmbedMessage({ embedColor, messageDescription, messageTitle })
+    const embeddedMessage = createEmbedMessage({ embedColor, fields, messageDescription, messageTitle })
     return { components, embeddedMessage }
   }
 }

@@ -31,6 +31,8 @@ module.exports = {
         const availableParticipantDeathMessages = PARTICIPANT_DEATH_MESSAGES.filter(message => !usedMessages.includes(message));
         const randomDeathMessageIndex = Math.floor(Math.random() * availableParticipantDeathMessages.length);
         usedMessages.push(availableParticipantDeathMessages[randomDeathMessageIndex]);
+        console.log(username)
+        console.log('username')
         const selectedDeathMessage = availableParticipantDeathMessages[randomDeathMessageIndex].replace("{USERNAME}", username);
         occurrenceDescription += selectedDeathMessage + '\n\u200b\n'
       } else {

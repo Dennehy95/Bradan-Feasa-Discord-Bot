@@ -33,6 +33,13 @@ module.exports = {
     return Math.floor((endDate - startDate));
   },
 
+  generateMsWaitTimes ({ minMilliseconds = 30000, maxMilliseconds = 2 * minMilliseconds } = {}) {
+    const msToEndOfCurrentEvent = Math.floor(Math.random() * (maxMilliseconds - minMilliseconds + 1)) + minMilliseconds;
+    const msToNextOccurrence = msToEndOfCurrentEvent * 2
+
+    return { msToEndOfCurrentEvent, msToNextOccurrence }
+  },
+
   getEventChannel ({ client, server }) {
     const channels = getAllowedChannels({
       client,

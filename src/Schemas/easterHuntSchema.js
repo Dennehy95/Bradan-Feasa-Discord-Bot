@@ -66,6 +66,7 @@ module.exports = {
     eventState: { type: String, default: 'notStarted', required: true },
     evilBunny: evilBunnySchema,
     eventStartTime: Date,
+    eventStartTimeText: String,
     isEventOver: Boolean,
     nextOccurrenceDate: Date,
     participants: [participantsSchema],

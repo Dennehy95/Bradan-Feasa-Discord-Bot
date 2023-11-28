@@ -38,7 +38,8 @@ module.exports = {
     const messageTitle = currentOccurrence.messageTitle
     let messageDescription = currentOccurrence.messageDescription || ''
     guildProfile.easterHunt?.participants.forEach(participant => {
-      messageDescription += `\n<@${participant.userId}>`
+      const status = participant.isAlive ? 'Alive' : 'Dead';
+      messageDescription += `\n<@${participant.userId}> - `
     })
 
     const embeddedMessage = createEmbedMessage({ embedColor, messageDescription, messageTitle })
