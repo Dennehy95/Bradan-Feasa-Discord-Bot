@@ -1,0 +1,216 @@
+{
+  "MOCK_EMBEDDED_MESSAGE": 
+  [
+    {
+      "data": {
+        "color": 1752220,
+        "footer": {},
+        "image": null,
+        "thumbnail": null,
+        "title": "Bradán Feasa - Easter 'Evil Bunny' - Ambush!",
+        "description": "<@142348873711616000> is caught in the ambush.\n\nWith a sinister grin, the bunny releases a barrage of Easter eggs in dangersalmon's direction, each one exploding on impact!\ndangersalmon fought bravely against the evil Easter Bunny, but in the end they were simply no match for its fearsome power.\n\nAll of the volunteer hunters have been defeated by the Bunny. The town is unprotected and is destroyed\n\n\ndangersalmon",
+        "fields": []
+      }
+    }
+  ],
+  "MOCK_EVENT_CHANNEL": {
+    "TextChannel": {
+      "type": 0,
+      "guild": {
+        "id": "GUILD_ID",
+        "name": "GUILD_NAME",
+        "icon": "GUILD_ICON",
+        "features": ["EXPOSED_TO_ACTIVITIES_WTP_EXPERIMENT"],
+        "commands": {},
+        "members": {},
+        "channels": {},
+        "bans": {},
+        "roles": {},
+        "presences": {},
+        "voiceStates": {},
+        "stageInstances": {},
+        "invites": {},
+        "scheduledEvents": {},
+        "autoModerationRules": {},
+        "available": true,
+        "shardId": 0,
+        "splash": null,
+        "banner": null,
+        "description": null,
+        "verificationLevel": 0,
+        "vanityURLCode": null,
+        "nsfwLevel": 0,
+        "premiumSubscriptionCount": 0,
+        "discoverySplash": null,
+        "memberCount": 10,
+        "large": false,
+        "premiumProgressBarEnabled": false,
+        "applicationId": null,
+        "afkTimeout": 300,
+        "afkChannelId": null,
+        "systemChannelId": null,
+        "premiumTier": 0,
+        "widgetEnabled": null,
+        "widgetChannelId": null,
+        "explicitContentFilter": 0,
+        "mfaLevel": 0,
+        "joinedTimestamp": 1673628947268,
+        "defaultMessageNotifications": 0,
+        "systemChannelFlags": 0,
+        "maximumMembers": 500000,
+        "maximumPresences": null,
+        "maxVideoChannelUsers": 25,
+        "maxStageVideoChannelUsers": 50,
+        "approximateMemberCount": null,
+        "approximatePresenceCount": null,
+        "vanityURLUses": null,
+        "rulesChannelId": null,
+        "publicUpdatesChannelId": null,
+        "preferredLocale": "en-US",
+        "ownerId": "142348873711616000",
+        "emojis": {},
+        "stickers": {}
+      },
+      "guildId": "GUILD_ID",
+      "parentId": null,
+      "permissionOverwrites": {},
+      "messages": {},
+      "threads": {},
+      "nsfw": false,
+      "flags": 0,
+      "id": "GUILD_ID",
+      "name": "general",
+      "rawPosition": 0,
+      "topic": null,
+      "lastMessageId": "LAST_MESSAGE_ID",
+      "rateLimitPerUser": 0
+    } 
+  },
+  "MOCK_PARTICIPANT_1": {
+    "isAlive": true,
+    "userId": "123456789987654321",
+    "username": "MockUser1Username",
+    "_id": "MOCK_USER_1_ID"
+  },
+  "MOCK_PARTICIPANT_2": {
+    "isAlive": true,
+    "userId": "123456789987654322",
+    "username": "MockUser2Username",
+    "_id": "MOCK_USER_2_ID"
+  },
+  "MOCK_PARTICIPANT_3": {
+    "isAlive": false,
+    "userId": "123456789987654323",
+    "username": "MockUser3Username",
+    "_id": "MOCK_USER_3_ID"
+  },
+  "MOCK_PARTICIPANT_4": {
+    "isAlive": true,
+    "userId": "123456789987654324",
+    "username": "MockUser4Username",
+    "_id": "MOCK_USER_4_ID"
+  },
+  "MOCK_PARTICIPANTS": [
+    {
+      "isAlive": true,
+      "userId": "123456789987654321",
+      "username": "MockUser1Username",
+      "_id": "MOCK_USER_1_ID"
+    },
+    {
+      "isAlive": true,
+      "userId": "123456789987654322",
+      "username": "MockUser2Username",
+      "_id": "MOCK_USER_2_ID"
+    },
+    {
+      "isAlive": false,
+      "userId": "123456789987654323",
+      "username": "MockUser3Username",
+      "_id": "MOCK_USER_3_ID"
+    },
+    {
+      "isAlive": true,
+      "userId": "123456789987654324",
+      "username": "MockUser4Username",
+      "_id": "MOCK_USER_4_ID"
+    }
+  ],
+  "MOCK_SELECTED_PARTICIPANTS": [
+    {
+      "isAlive": true,
+      "userId": "123456789987654321",
+      "username": "MockUser1Username",
+      "_id": "MOCK_USER_1_ID"
+    },
+    {
+      "isAlive": true,
+      "userId": "123456789987654322",
+      "username": "MockUser2Username",
+      "_id": "MOCK_USER_2_ID"
+    }
+  ],
+  "MOCK_UPDATED_EVENT_DATA": {
+    "currentOccurrence": {
+      "_id": "UNIQUE_ID",
+      "actions": [],
+      "maximumSelectedParticipants": 4,
+      "messageDescription": "Suddenly the Bunny bursts from the bushes and begins attacking some unsuspecting victims!\n",
+      "messageTitle": "Bradán Feasa - Easter 'Evil Bunny' - Ambush!",
+      "minimumSelectedParticipants": 1,
+      "occurrenceName": "ambush",
+      "selectedParticipants": [
+        {
+          "isAlive": true,
+          "userId": "123456789987654321",
+          "username": "MockUser1Username",
+          "_id": "MOCK_USER_1_ID"
+        },
+        {
+          "isAlive": true,
+          "userId": "123456789987654322",
+          "username": "MockUser2Username",
+          "_id": "MOCK_USER_2_ID"
+        }
+      ]
+    },
+    "currentOccurrenceEndDate": "2023-12-04T17:32:49.641Z",
+    "currentOccurrenceIndex": 2,
+    "eventState": "inProgress",
+    "evilBunny": {
+      "health": 3,
+      "_id": "UNIQUE_ID"
+    },
+    "eventStartTime": "2023-12-04T17:29:48.592Z",
+    "eventStartTimeText": "1 minute",
+    "isEventOver": false,
+    "nextOccurrenceDate": "2023-12-04T17:33:25.010Z",
+    "participants": [
+      {
+        "isAlive": true,
+        "userId": "123456789987654321",
+        "username": "MockUser1Username",
+        "_id": "MOCK_USER_1_ID"
+      },
+      {
+        "isAlive": true,
+        "userId": "123456789987654322",
+        "username": "MockUser2Username",
+        "_id": "MOCK_USER_2_ID"
+      },
+      {
+        "isAlive": false,
+        "userId": "123456789987654323",
+        "username": "MockUser3Username",
+        "_id": "MOCK_USER_3_ID"
+      },
+      {
+        "isAlive": true,
+        "userId": "123456789987654324",
+        "username": "MockUser4Username",
+        "_id": "MOCK_USER_4_ID"
+      }
+    ],
+    "_id": "UNIQUE_ID"
+  }
+}

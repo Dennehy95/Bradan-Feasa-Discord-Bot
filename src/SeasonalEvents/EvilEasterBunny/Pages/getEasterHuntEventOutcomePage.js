@@ -1,5 +1,6 @@
-const Guild = require('../Schemas/guild');
-const { createEmbedMessage } = require('../Utils/discordEmbedUtils');
+const Guild = require('../../../Schemas/guild');
+const { createEmbedMessage } = require('../../../Utils/discordEmbedUtils');
+const { generateNewGuildDBEntry } = require('../../../Utils/discordGuildUtils');
 
 const getComponentsEasterHuntEventOutcomePage = () => {
   let components = [];
@@ -7,17 +8,19 @@ const getComponentsEasterHuntEventOutcomePage = () => {
 };
 
 module.exports = {
-  async getEasterHuntEventOutcomePage ({
+  async getEasterHuntEventOutcomePage({
     guildId,
     occurrenceDescription,
-    occurrenceTitle
+    occurrenceTitle = '',
+    eventData,
   }) {
     let guildProfile = await Guild.findOne({ guildId });
     if (!guildProfile) {
-      guildProfile = await generateNewGuildDBEntry(guild);
+      const guildProfile = await generateNewGuildDBEntry(Guild);
 
       await guildProfile.save().catch(console.error);
     }
+    const updatedEventData = eventData || guildProfile.easterHunt;
 
     const components = getComponentsEasterHuntEventOutcomePage();
     const embedColor = '#1ABC9C';
@@ -26,10 +29,11 @@ module.exports = {
     let messageDescription = occurrenceDescription || 'Easter Evil Bunny';
     // TODO
     // If no one, end event
-
-    guildProfile.easterHunt?.participants.forEach(
-      (participant) => (messageDescription += '\n' + participant.username)
-    );
+    updatedEventData?.participants.forEach((participant) => {
+      console.log(participant);
+      const status = participant.isAlive ? 'Alive' : 'Dead';
+      messageDescription += `\n ${participant.username} - ${status}`;
+    });
 
     const embeddedMessage = createEmbedMessage({
       embedColor,

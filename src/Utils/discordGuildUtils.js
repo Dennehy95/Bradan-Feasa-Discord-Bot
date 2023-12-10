@@ -1,11 +1,13 @@
+const mongoose = require("mongoose");
 const Guild = require("../Schemas/guild");
 const { PermissionsBitField } = require('discord.js');
 
 module.exports = {
   generateNewGuildDBEntry: async (guild) => {
-    await new Guild({
-      _id: mongoose.Types.ObjectId(),
-      guildId: guildId,
+    console.log('TODO: check if guild.guildId is real')
+    return await new Guild({
+      _id: new mongoose.Types.ObjectId(),
+      guildId: guild.guildId,
       guildName: guild.name,
       moviesData: {
         genreList: [],

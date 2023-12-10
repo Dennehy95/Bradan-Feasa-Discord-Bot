@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "resolveJsonModule": true,
+    "module": "commonjs",
+    "target": "es2017",
+    "types": ["jest", "node"]
+  },
+  "exclude": ["node_modules", "**/node_modules/*"],
+  "include": ["src/**/*.js", "test/**/*.js"]
+}

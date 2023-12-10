@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { getManageEventsOverviewPage, getManageEventsPage } = require('../SeasonalEvents/manageEventsPage.js');
+const { getManageEventsPage } = require('../SeasonalEvents/manageEventsPage.js');
 
 module.exports = {
   data: new SlashCommandBuilder()

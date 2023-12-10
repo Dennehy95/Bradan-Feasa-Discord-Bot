@@ -1,9 +1,11 @@
 const { activateEasterEvent } = require('./Easter/easterEvent');
-const { doEasterEvilBunnyHunt } = require('./Easter/easterEvilBunnyHunt');
+const {
+  doEasterEvilBunnyHunt,
+} = require('./Easter/EasterEvilBunny/easterEvilBunnyHunt');
 
 module.exports = {
-  activateSeasonalEvents (client) {
+  activateSeasonalEvents(client) {
     // activateEasterEvent(client)
-    doEasterEvilBunnyHunt({ client })
-  }
-}
+    doEasterEvilBunnyHunt({ client });
+  },
+};
