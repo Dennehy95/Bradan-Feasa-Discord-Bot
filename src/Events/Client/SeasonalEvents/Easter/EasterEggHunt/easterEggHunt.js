@@ -15,20 +15,25 @@ module.exports = {
     // Post the thing into each channel
     const eggEmojis = ['🥚', '🍳', '🐣', '🐥', '🐰'];
 
-    const channels = client.channels.cache.filter(channel => {
+    const channels = client.channels.cache.filter((channel) => {
       return (
         channel.type === 0 &&
-        channel.permissionsFor(client.user).has(PermissionsBitField.Flags.ReadMessageHistory) &&
-        channel.permissionsFor(client.user).has(PermissionsBitField.Flags.SendMessages) &&
-        channel.permissionsFor(client.user).has(PermissionsBitField.Flags.ViewChannel)
-      )
+        channel
+          .permissionsFor(client.user)
+          .has(PermissionsBitField.Flags.ReadMessageHistory) &&
+        channel
+          .permissionsFor(client.user)
+          .has(PermissionsBitField.Flags.SendMessages) &&
+        channel
+          .permissionsFor(client.user)
+          .has(PermissionsBitField.Flags.ViewChannel)
+      );
     });
 
     // const minMilliseconds = 60 * 60 * 1000; // 1 hour in milliseconds
     // // const minMilliseconds = 60 * 60; // 1 min in milliseconds
     // const maxMilliseconds = 4 * minMilliseconds; // 4 hours in milliseconds
     // const randomMilliseconds = Math.floor(Math.random() * (maxMilliseconds - minMilliseconds + 1)) + minMilliseconds;
-    // console.log('New hourly interval = ' + randomMilliseconds)
     // activateIntervalCheck = randomMilliseconds
 
     // Post start message
@@ -42,14 +47,21 @@ module.exports = {
     // Post eggs messages every 30 seconds
     const interval = setInterval(async () => {
       if (!eventEnd) {
-        const eggChannel = eggChannels[Math.floor(Math.random() * eggChannels.length)];
+        const eggChannel =
+          eggChannels[Math.floor(Math.random() * eggChannels.length)];
         const { message, emoji } = await eggChannel(randomChannel);
-        const filter = (interaction) => interaction.customId === 'collect-egg' && !interaction.user.bot;
-        const collector = message.createMessageComponentCollector({ filter, time: 25000 });
+        const filter = (interaction) =>
+          interaction.customId === 'collect-egg' && !interaction.user.bot;
+        const collector = message.createMessageComponentCollector({
+          filter,
+          time: 25000,
+        });
 
-        collector.on('collect', async interaction => {
+        collector.on('collect', async (interaction) => {
           const user = interaction.user;
-          eggCount[user.username] = eggCount[user.username] ? eggCount[user.username] + 1 : 1;
+          eggCount[user.username] = eggCount[user.username]
+            ? eggCount[user.username] + 1
+            : 1;
           await interaction.update(`${user.username} has collected ${emoji}`);
           collector.stop();
         });
@@ -66,24 +78,25 @@ module.exports = {
           clearInterval(interval);
 
           // Post summary message
-          const summaryMessage = 'The Easter Egg Hunt has ended! Here are the results:\n\n';
-          const eggStats = Object.entries(eggCount).map(([user, eggs]) => `${user}: ${eggs} egg${eggs > 1 ? 's' : ''}`);
+          const summaryMessage =
+            'The Easter Egg Hunt has ended! Here are the results:\n\n';
+          const eggStats = Object.entries(eggCount).map(
+            ([user, eggs]) => `${user}: ${eggs} egg${eggs > 1 ? 's' : ''}`
+          );
           const statsMessage = eggStats.join('\n');
-          const totalEggs = Object.values(eggCount).reduce((total, eggs) => total + eggs, 0);
+          const totalEggs = Object.values(eggCount).reduce(
+            (total, eggs) => total + eggs,
+            0
+          );
           const totalMessage = `A total of ${totalEggs} eggs were collected!`;
-          const endMessage = summaryMessage + statsMessage + '\n\n' + totalMessage;
+          const endMessage =
+            summaryMessage + statsMessage + '\n\n' + totalMessage;
           await startMsg.edit(endMessage);
         }
       }
     }, 30000);
-  }
-}
-
-
-
-
-
-
+  },
+};
 
 // const eggCount = Math.floor(Math.random() * 10) + 1; // between 1 and 10 eggs
 // const eggLocations = new Set();

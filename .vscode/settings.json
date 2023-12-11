@@ -2,5 +2,6 @@
   "cSpell.words": [
     "Bradán",
     "Feasa"
-  ]
+  ],
+  "js/ts.implicitProjectConfig.checkJs": true,
 }

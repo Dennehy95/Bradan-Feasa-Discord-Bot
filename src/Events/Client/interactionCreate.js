@@ -61,8 +61,6 @@ module.exports = {
 
 const buttonClickedEvent = async (interaction) => {
   // https://discordjs.guide/interactions/modals.html#the-interactioncreate-event
-  console.log(interaction.customId);
-  console.log(interaction.customId.split('_')[0]);
   const interactionCustomIDStartsWith = interaction.customId.split('_')[0];
   /********************* Seasonal Events **************************/
   let components, embeddedMessage, movieId, selectedEvent, selectedGenre;
@@ -111,7 +109,7 @@ const buttonClickedEvent = async (interaction) => {
         eventName: interactionCustomIDStartsWith,
         eventChannel: interaction.channel,
         guildId: interaction.guildId,
-        updatedEventData: {},
+        updatedEventData: null,
       });
 
     /********************* Movies **************************/

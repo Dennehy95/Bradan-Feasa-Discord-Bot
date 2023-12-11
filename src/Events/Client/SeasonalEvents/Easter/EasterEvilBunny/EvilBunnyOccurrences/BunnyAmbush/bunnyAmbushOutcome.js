@@ -1,16 +1,15 @@
 const {
   getEasterHuntEventOutcomePage,
-} = require('../../../../../../SeasonalEvents/EvilEasterBunny/Pages/getEasterHuntEventOutcomePage');
-const { rollD20 } = require('../../../utils');
+} = require('../../../../../../../SeasonalEvents/EvilEasterBunny/Pages/getEasterHuntEventOutcomePage');
+const { rollD20 } = require('../../../../utils');
 const {
   allParticipantsKilled,
   selectRandomMessage,
-} = require('../easterEvilBunnyHuntUtils');
-const {
-  BUNNY_ATTACKS,
-  PARTICIPANT_DEATH_MESSAGES,
-  PARTICIPANT_ESCAPE_MESSAGES,
-} = require('./easterEvilBunnyOccurrencesConstants');
+  handleParticipantDeath,
+  handleParticipantEscape,
+  sendEventOutcomeMessage,
+} = require('../../easterEvilBunnyHuntUtils');
+const { BUNNY_ATTACKS } = require('../easterEvilBunnyOccurrencesConstants');
 
 //TODO later this should just ping the event role, we create and delete the role as needed
 const generateInitialOccurrenceDescription = async function ({
@@ -64,53 +63,6 @@ const simulateAmbushEvent = async function ({
   };
 };
 
-const handleParticipantDeath = function ({
-  occurrenceDescription,
-  updatedEventData,
-  usedMessages = [],
-  userId,
-  username,
-}) {
-  const participantIndex = updatedEventData.participants.findIndex(
-    (participant) => participant.userId === userId
-  );
-  updatedEventData.participants[participantIndex].isAlive = false;
-  let updatedUsedMessages = usedMessages;
-  const selectedRandomMessageData = selectRandomMessage({
-    messages: PARTICIPANT_DEATH_MESSAGES,
-    usedMessages: updatedUsedMessages,
-  });
-  const selectedDeathMessage =
-    selectedRandomMessageData.selectedMessage.replace(/{USERNAME}/g, username);
-  updatedUsedMessages = selectedRandomMessageData.usedMessages;
-  return {
-    occurrenceDescription: (occurrenceDescription +=
-      selectedDeathMessage + '\n\u200b\n'),
-    updatedEventData,
-    usedMessages: updatedUsedMessages,
-  };
-};
-
-const handleParticipantEscape = function ({
-  occurrenceDescription,
-  updatedEventData,
-  usedMessages = [],
-  username,
-}) {
-  const selectedRandomMessageData = selectRandomMessage({
-    messages: PARTICIPANT_ESCAPE_MESSAGES,
-    usedMessages,
-  });
-  const selectedEscapeMessage =
-    selectedRandomMessageData.selectedMessage.replace(/{USERNAME}/g, username);
-  return {
-    occurrenceDescription: (occurrenceDescription +=
-      selectedEscapeMessage + '\n\u200b\n'),
-    updatedEventData,
-    usedMessages,
-  };
-};
-
 const handleEventOutcome = async function ({
   occurrenceDescription,
   updatedEventData,
@@ -127,30 +79,9 @@ const handleEventOutcome = async function ({
   return { occurrenceDescription, updatedEventData };
 };
 
-const sendEventOutcomeMessage = function ({
-  actionTaken,
-  eventChannel,
-  embeddedMessage,
-}) {
-  if (actionTaken.interaction) {
-    actionTaken.interaction.reply({
-      embeds: embeddedMessage,
-      ephemeral: false,
-    });
-  } else {
-    eventChannel.send({
-      embeds: embeddedMessage,
-      ephemeral: false,
-    });
-  }
-};
-
 module.exports = {
   generateInitialOccurrenceDescription,
   handleEventOutcome,
-  handleParticipantDeath,
-  handleParticipantEscape,
-  sendEventOutcomeMessage,
   simulateAmbushEvent,
 
   async triggerBunnyAmbushOutcome({

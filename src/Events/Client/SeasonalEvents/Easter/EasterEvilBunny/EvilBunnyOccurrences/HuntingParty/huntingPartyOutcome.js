@@ -2,14 +2,21 @@ const {
   getEasterHuntEventOutcomePage,
 } = require('../../../../../../../SeasonalEvents/EvilEasterBunny/Pages/getEasterHuntEventOutcomePage');
 const { rollD20 } = require('../../../../utils');
-const { allParticipantsKilled } = require('../../easterEvilBunnyHuntUtils');
+const {
+  allParticipantsKilled,
+  sendEventOutcomeMessage,
+} = require('../../easterEvilBunnyHuntUtils');
 const {
   BUNNY_ATTACKS,
   PARTICIPANT_DEATH_MESSAGES,
   PARTICIPANT_ESCAPE_MESSAGES,
   PARTICIPANT_ATTACKS_MESSAGES,
 } = require('../easterEvilBunnyOccurrencesConstants');
-const { huntingPartyGoOnHunt } = require('./huntingPartyActions');
+const {
+  huntingPartyGoOnHunt,
+  huntingPartyHide,
+  huntingPartyTrickOtherHunters,
+} = require('./huntingPartyActions');
 
 const generateInitialOccurrenceDescription = async function ({
   selectedParticipants,
@@ -70,37 +77,47 @@ module.exports = {
         break;
 
       case 'hide':
-        console.log('hiding');
         // Roll once. If successful the party hide and nothing happens, if major fail they are caught and one of them risks being exiled
+        ({ occurrenceDescription, occurrenceTitle, updatedEventData } =
+          await huntingPartyHide({
+            difficultyModifier,
+            occurrenceDescription,
+            occurrenceTitle,
+            updatedEventData,
+          }));
         break;
+
       case 'trickOtherHunters':
-        console.log('tricking');
-        // The user gets to hide successfully. The others go on the hunt as in the first action
+        // The user who clicks gets to hide successfully. The others go on the hunt as in the first action
+        ({ occurrenceDescription, occurrenceTitle, updatedEventData } =
+          await huntingPartyTrickOtherHunters({
+            difficultyModifier,
+            occurrenceDescription,
+            occurrenceTitle,
+            updatedEventData,
+          }));
         break;
       default:
-        console.log('No action taken');
         occurrenceDescription += 'No action taken';
         // Either you feel asleep, or you forgot to go on hunt
         // Random chance, either King chastises the group and nothing happens, or one member is exiled from the city and Eaten by the Bunny
         break;
     }
 
+    /* getEventOutcomeMessage */
     const { embeddedMessage } = await getEasterHuntEventOutcomePage({
+      eventData: updatedEventData,
       guildId,
       occurrenceDescription,
       occurrenceTitle,
     });
-    if (actionTaken.interaction) {
-      await actionTaken.interaction.reply({
-        embeds: embeddedMessage,
-        ephemeral: false,
-      });
-    } else {
-      await eventChannel.send({
-        embeds: embeddedMessage,
-        ephemeral: false,
-      });
-    }
+
+    /* sendEventOutcomeMessage */
+    await sendEventOutcomeMessage({
+      actionTaken,
+      eventChannel,
+      embeddedMessage,
+    });
 
     return updatedEventData;
   },

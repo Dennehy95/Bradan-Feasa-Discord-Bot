@@ -16,7 +16,7 @@ const easterEvent = (client, server) => {
     //doEasterEggHuntEvent(client)
     doEasterEvilBunnyHunt({ client, server });
   }
-  console.log(
+  console.info(
     'Easter event is waiting ' +
       msUntilNextStartOrEnd +
       ' milliseconds before calling again'

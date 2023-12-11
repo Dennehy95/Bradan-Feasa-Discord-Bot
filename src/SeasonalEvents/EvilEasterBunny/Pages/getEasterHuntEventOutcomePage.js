@@ -30,7 +30,6 @@ module.exports = {
     // TODO
     // If no one, end event
     updatedEventData?.participants.forEach((participant) => {
-      console.log(participant);
       const status = participant.isAlive ? 'Alive' : 'Dead';
       messageDescription += `\n ${participant.username} - ${status}`;
     });

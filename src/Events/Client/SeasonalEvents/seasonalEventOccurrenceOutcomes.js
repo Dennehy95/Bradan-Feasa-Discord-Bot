@@ -42,12 +42,7 @@ module.exports = {
     if (!updatedEventData) {
       updatedEventData = guildProfile.easterHunt;
     }
-    console.log(actionId);
     if (actionId != null) {
-      console.log(occurrenceIndex);
-      console.log(updatedEventData.currentOccurrenceIndex);
-      console.log(messageCreatedTimestamp);
-      console.log(updatedEventData.eventStartTime);
       if (
         occurrenceIndex !== updatedEventData.currentOccurrenceIndex ||
         dateDiffInMS(messageCreatedTimestamp, updatedEventData.eventStartTime) >
@@ -95,7 +90,7 @@ module.exports = {
         // updatedEventData = await easterEvilBunnyHuntOccurrenceOutcomes(EventOutcomeData);
         break;
       default:
-        console.log('No event name found');
+        console.info('No event name found');
     }
 
     updatedEventData.currentOccurrenceIndex += 1;

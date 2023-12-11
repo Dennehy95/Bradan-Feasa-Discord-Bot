@@ -1,6 +1,8 @@
 const Guild = require('../../../../../../Schemas/guild');
 const { dateDiffInMS } = require('../../../utils');
-const { triggerBunnyAmbushOutcome } = require('./bunnyAmbushOutcome');
+const {
+  triggerBunnyAmbushOutcome,
+} = require('./BunnyAmbush/bunnyAmbushOutcome');
 const {
   triggerHuntingPartyOutcome,
 } = require('./HuntingParty/huntingPartyOutcome');
@@ -28,7 +30,7 @@ module.exports = {
         updatedEventData = await triggerHuntingPartyOutcome(eventOutcomeData);
         break;
       default:
-        console.log('No event name found');
+        console.info('No event name found');
     }
 
     return updatedEventData;

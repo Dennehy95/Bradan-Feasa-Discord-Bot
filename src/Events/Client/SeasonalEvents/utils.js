@@ -22,8 +22,6 @@ const shuffleArray = (array) => {
 
 module.exports = {
   dateDiffInMS(startDate, endDate) {
-    // console.log(startDate)
-    // console.log(endDate)
     // const _MS_PER_DAY = 1000 * 60 * 60 * 24;
 
     // Discard the time and time-zone information. This is for fully accurate between timezones. We are only using UTC so should be fine

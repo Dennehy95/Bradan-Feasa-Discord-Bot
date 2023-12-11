@@ -2,16 +2,12 @@ const { rollD20 } = require('../../../../utils');
 const {
   allParticipantsKilled,
   selectRandomMessage,
-} = require('../../easterEvilBunnyHuntUtils');
-const {
-  simulateAmbushEvent,
   handleParticipantDeath,
-} = require('../bunnyAmbushOutcome');
-const {
-  BUNNY_ATTACKS,
-  PARTICIPANT_ATTACKS_MESSAGES,
-  PARTICIPANT_ATTACKS_MISSED_MESSAGES,
-} = require('../easterEvilBunnyOccurrencesConstants');
+  handleParticipantAttackMiss,
+  handleParticipantAttackHits,
+} = require('../../easterEvilBunnyHuntUtils');
+const { simulateAmbushEvent } = require('../BunnyAmbush/bunnyAmbushOutcome');
+const { BUNNY_ATTACKS } = require('../easterEvilBunnyOccurrencesConstants');
 
 const huntingPartyGoOnHunt = async function ({
   difficultyModifier,
@@ -19,7 +15,6 @@ const huntingPartyGoOnHunt = async function ({
   occurrenceTitle,
   updatedEventData,
 }) {
-  const { selectedParticipants } = updatedEventData.currentOccurrence;
   const initialRoll = rollD20(difficultyModifier);
   let bunnyDefeated = false;
   let bunnyHurt = false;
@@ -30,7 +25,7 @@ const huntingPartyGoOnHunt = async function ({
   switch (true) {
     case initialRoll < 5:
       // DO AMBUSH
-      occurrenceDescription =
+      occurrenceDescription +=
         'However, they were not careful and the Bunny was able to ambush them!\n\u200b\n';
       occurrenceTitle = `Bradán Feasa - Easter 'Evil Bunny' - Hunt Ambush!`;
 
@@ -39,67 +34,15 @@ const huntingPartyGoOnHunt = async function ({
         occurrenceDescription,
         updatedEventData,
       }));
-
       break;
-
-    // selectedParticipants.forEach((selectedParticipant) => {
-    //   const username = selectedParticipant.username;
-    //   const availableBunnyAttacks = BUNNY_ATTACKS.filter(
-    //     (message) => !usedMessages.includes(message)
-    //   );
-    //   const randomAttackIndex = Math.floor(
-    //     Math.random() * availableBunnyAttacks.length
-    //   );
-    //   usedMessages.push(availableBunnyAttacks[randomAttackIndex]);
-    //   const selectedAttack = availableBunnyAttacks[randomAttackIndex].replace(
-    //     /{USERNAME}/g,
-    //     username
-    //   );
-    //   occurrenceDescription += selectedAttack + '\n';
-
-    //   if (rollD20(difficultyModifier) < 11) {
-    //     const participantIndex = updatedEventData.participants.findIndex(
-    //       (participant) => participant.userId === selectedParticipant.userId
-    //     );
-    //     updatedEventData.participants[participantIndex].isAlive = false;
-
-    //     const availableParticipantDeathMessages =
-    //       PARTICIPANT_DEATH_MESSAGES.filter(
-    //         (message) => !usedMessages.includes(message)
-    //       );
-    //     const randomDeathMessageIndex = Math.floor(
-    //       Math.random() * availableParticipantDeathMessages.length
-    //     );
-    //     usedMessages.push(
-    //       availableParticipantDeathMessages[randomDeathMessageIndex]
-    //     );
-    //     const selectedDeathMessage = availableParticipantDeathMessages[
-    //       randomDeathMessageIndex
-    //     ].replace(/{USERNAME}/g, username);
-    //     occurrenceDescription += selectedDeathMessage + '\n\u200b\n';
-    //   } else {
-    //     const availableEscapeMessages = PARTICIPANT_ESCAPE_MESSAGES.filter(
-    //       (message) => !usedMessages.includes(message)
-    //     );
-    //     const randomEscapeMessageIndex = Math.floor(
-    //       Math.random() * availableEscapeMessages.length
-    //     );
-    //     usedMessages.push(availableEscapeMessages[randomEscapeMessageIndex]);
-    //     const selectedEscapeMessage = availableEscapeMessages[
-    //       randomEscapeMessageIndex
-    //     ].replace(/{USERNAME}/g, username);
-    //     occurrenceDescription += selectedEscapeMessage + '\n\u200b\n';
-    //   }
-    // });
-
     case initialRoll >= 5 && initialRoll < 15:
       // Do not found
       occurrenceDescription +=
         'They searched for hours but could not find the Bunny. They give up and go back to the town for the night.\n';
-
+      break;
     case initialRoll >= 15:
       // Do found bunny
-      occurrenceDescription =
+      occurrenceDescription +=
         'They were able to find large paw-prints and tracked them to find the Bunny!\n\u200b\n';
 
       for (const selectedParticipant of updatedEventData.currentOccurrence
@@ -128,30 +71,8 @@ const huntingPartyGoOnHunt = async function ({
                 userId,
                 username,
               }));
-          // const participantIndex = updatedEventData.participants.findIndex(
-          //   (participant) => {
-          //     return participant.userId === selectedParticipant.userId;
-          //   }
-          // );
-          // console.log(selectedParticipant);
-          // console.log(participantIndex);
-          // console.log(updatedEventData.participants);
-          // updatedEventData.participants[participantIndex].isAlive = false;
+            break;
 
-          // const availableParticipantDeathMessages =
-          //   PARTICIPANT_DEATH_MESSAGES.filter(
-          //     (message) => !usedMessages.includes(message)
-          //   );
-          // const randomDeathMessageIndex = Math.floor(
-          //   Math.random() * availableParticipantDeathMessages.length
-          // );
-          // usedMessages.push(
-          //   availableParticipantDeathMessages[randomDeathMessageIndex]
-          // );
-          // const selectedDeathMessage = availableParticipantDeathMessages[
-          //   randomDeathMessageIndex
-          // ].replace(/{USERNAME}/g, username);
-          // occurrenceDescription += selectedDeathMessage + '\n\u200b\n';
           case attackRoll >= 5 && attackRoll < 15:
             // Bunny found and participant attacks but misses
             ({ occurrenceDescription, updatedEventData, usedMessages } =
@@ -161,25 +82,10 @@ const huntingPartyGoOnHunt = async function ({
                 usedMessages,
                 username,
               }));
+            break;
 
           case attackRoll >= 15:
             // Bunny found and participant attacks and hits
-
-            // const availableParticipantAttacks = PARTICIPANT_ATTACKS.filter(
-            //   (message) => !usedMessages.includes(message)
-            // );
-            // const randomAttackIndex = Math.floor(
-            //   Math.random() * availableParticipantAttacks.length
-            // );
-            // usedMessages.push(availableParticipantAttacks[randomAttackIndex]);
-            // const selectedParticipantAttack = availableParticipantAttacks[
-            //   randomAttackIndex
-            // ].replace(/{USERNAME}/g, username);
-            // occurrenceDescription += selectedParticipantAttack + '\n';
-
-            // updatedEventData.evilBunny.health -= 1;
-            // bunnyHurt = true;
-            // if (updatedEventData.evilBunny.health <= 0) bunnyDefeated = true;
             ({
               bunnyDefeated,
               bunnyHurt,
@@ -193,21 +99,23 @@ const huntingPartyGoOnHunt = async function ({
               userId,
               username,
             }));
+            break;
+
+          default:
+            console.info(
+              'Dice roll error: huntingPartyGoOnHunt -> Bunny found'
+            );
         }
       }
-
+      break;
     default:
-      console.log('Dice roll error');
+      console.info('Dice roll error');
   }
 
-  //TODO
-  // Check if bunny is alive. If hurt say it runs off, if ev
   if (bunnyDefeated) {
     occurrenceDescription += 'The bunny was defeated' + '\n\u200b\n';
     updatedEventData.isEventOver = true;
-  }
-  // TODO Everyone killed
-  else if (allParticipantsKilled(updatedEventData.participants)) {
+  } else if (allParticipantsKilled(updatedEventData.participants)) {
     updatedEventData.isEventOver = true;
     occurrenceDescription +=
       'All of the volunteer hunters have been defeated by the Bunny. The town is unprotected and is destroyed' +
@@ -222,58 +130,137 @@ const huntingPartyGoOnHunt = async function ({
   return { occurrenceDescription, occurrenceTitle, updatedEventData };
 };
 
-const handleParticipantAttackMiss = function ({
+/*
+Selected participants hide to avoid going on duty
+
+Roll a 1 and one of them is exiled and killed, the rest are forced to go on the hunt
+Roll a 2-9 are caught by guards and sent out on hunt
+Roll a 10-18 They manage to hide and avoid going on the hunt
+Roll a 19-20 and one of them finds a strong weapon hidden somewhere
+*/
+const huntingPartyHide = async function ({
+  difficultyModifier,
   occurrenceDescription,
+  occurrenceTitle,
   updatedEventData,
-  usedMessages = [],
-  username,
 }) {
-  const selectedRandomMessageData = selectRandomMessage({
-    messages: PARTICIPANT_ATTACKS_MISSED_MESSAGES,
-    usedMessages,
-  });
-  const selectedAttackMissedMessage =
-    selectedRandomMessageData.selectedMessage.replace(/{USERNAME}/g, username);
-  return {
-    occurrenceDescription: (occurrenceDescription +=
-      selectedAttackMissedMessage + '\n\u200b\n'),
-    updatedEventData,
-    usedMessages,
-  };
+  const initialRoll = rollD20(difficultyModifier);
+  occurrenceDescription +=
+    'The party decides to hide to avoid having to go on the hunt..\n\u200b\n';
+
+  switch (true) {
+    case initialRoll < 2:
+      occurrenceDescription +=
+        'However, they were spotted by the Kings guards! They decided that XX would be sent out alone as punishment. The rest are led out onto the hunt\n\u200b\n';
+
+      //TODO
+      // Kill on selected participant and remove them from the selected participants
+      // TODO later, have a dice roll and if its a 20 the exiled person joins with the Bunny secretly
+      ({ occurrenceDescription, occurrenceTitle, updatedEventData } =
+        await huntingPartyGoOnHunt({
+          difficultyModifier,
+          occurrenceDescription,
+          occurrenceTitle,
+          updatedEventData,
+        }));
+      break;
+
+    case initialRoll >= 2 && initialRoll < 10:
+      occurrenceDescription +=
+        'However, they were spotted by the town watch while trying to hide. They are forced to go out on the hunt.\n\u200b\n';
+
+      //TODO
+      // Kill on selected participant and remove them from the selected participants
+      // TODO later, have a dice roll and if its a 20 the exiled person joins with the Bunny secretly
+      ({ occurrenceDescription, occurrenceTitle, updatedEventData } =
+        await huntingPartyGoOnHunt({
+          difficultyModifier,
+          occurrenceDescription,
+          occurrenceTitle,
+          updatedEventData,
+        }));
+      break;
+
+    case initialRoll >= 10 && initialRoll < 19:
+      occurrenceDescription +=
+        'They manage to evade the town watch and avoid going out on the hunt.\n\u200b\n';
+      break;
+
+    case initialRoll >= 19:
+      //TODOdomWeapon someone had stashed away
+      // Select someone and store the weapon on them giving them a +1 to attack rolls
+      occurrenceDescription +=
+        'They manage to evade the town watch and avoid going out on the hunt. While hiding, XX found a TODOgetRandomWeapon someone had stashed away.\n\u200b\n';
+      break;
+  }
+
+  return { occurrenceDescription, occurrenceTitle, updatedEventData };
 };
 
-const handleParticipantAttackHits = function ({
+/*
+Roll a 1 instigator is caught and forced to go out on hunt
+Roll a 2-9 doesn't fool others, and they all go on the hunt
+Roll a 10-20 They manage to hide and avoid going on the hunt, the others go on the hunt
+*/
+const huntingPartyTrickOtherHunters = async function ({
+  difficultyModifier,
   occurrenceDescription,
+  occurrenceTitle,
   updatedEventData,
-  usedMessages = [],
-  userId,
-  username,
 }) {
-  const participantIndex = updatedEventData.participants.findIndex(
-    (participant) => participant.userId === userId
-  );
-  let updatedUsedMessages = usedMessages;
-  const selectedRandomMessageData = selectRandomMessage({
-    messages: PARTICIPANT_ATTACKS_MESSAGES,
-    usedMessages: updatedUsedMessages,
-  });
-  const selectedDeathMessage =
-    selectedRandomMessageData.selectedMessage.replace(/{USERNAME}/g, username);
-  updatedUsedMessages = selectedRandomMessageData.usedMessages;
-  updatedEventData.evilBunny.health -= 1;
-  const bunnyHurt = true;
-  let bunnyDefeated = false;
-  if (updatedEventData.evilBunny.health <= 0) bunnyDefeated = true;
-  return {
-    bunnyDefeated,
-    bunnyHurt,
-    occurrenceDescription: (occurrenceDescription +=
-      selectedDeathMessage + '\n\u200b\n'),
-    updatedEventData,
-    usedMessages: updatedUsedMessages,
-  };
+  const initialRoll = rollD20(difficultyModifier);
+  occurrenceDescription +=
+    'XX tries to avoid hunting party duty by YYY..\n\u200b\n';
+  switch (true) {
+    case initialRoll < 2:
+      occurrenceDescription +=
+        'However, XXX was caught trying to trick the others. They were beaten up and sent out of the hunt alone.\n\u200b\n';
+      // TODO -1 debuff to Selected participant, make them the only selected participant
+
+      //TODO
+      // Kill on selected participant and remove them from the selected participants
+      // TODO later, have a dice roll and if its a 20 the exiled person joins with the Bunny secretly
+      ({ occurrenceDescription, occurrenceTitle, updatedEventData } =
+        await huntingPartyGoOnHunt({
+          difficultyModifier,
+          occurrenceDescription,
+          occurrenceTitle,
+          updatedEventData,
+        }));
+      break;
+
+    case initialRoll >= 2 && initialRoll < 10:
+      occurrenceDescription +=
+        'However, XX was not convincing enough and had to join the hunt with the others.\n\u200b\n';
+      ({ occurrenceDescription, occurrenceTitle, updatedEventData } =
+        await huntingPartyGoOnHunt({
+          difficultyModifier,
+          occurrenceDescription,
+          occurrenceTitle,
+          updatedEventData,
+        }));
+      break;
+
+    case initialRoll >= 10:
+      occurrenceDescription +=
+        'XX managed to fool the others and avoids having to go out on the hunt!\n\u200b\n';
+      // TODO remove instigator from selected participants
+      ({ occurrenceDescription, occurrenceTitle, updatedEventData } =
+        await huntingPartyGoOnHunt({
+          difficultyModifier,
+          occurrenceDescription,
+          occurrenceTitle,
+          updatedEventData,
+        }));
+      break;
+    default:
+      console.info('Dice roll error: huntingPartyTrickOtherHunters');
+  }
+  return { occurrenceDescription, occurrenceTitle, updatedEventData };
 };
 
 module.exports = {
   huntingPartyGoOnHunt,
+  huntingPartyHide,
+  huntingPartyTrickOtherHunters,
 };

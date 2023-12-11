@@ -1,11 +1,9 @@
 const _ = require('lodash');
-const bunnyAmbushOutcome = require('../../../../../../src/Events/Client/SeasonalEvents/Easter/EasterEvilBunny/EvilBunnyOccurrences/bunnyAmbushOutcome');
+const bunnyAmbushOutcome = require('../../../../../../src/Events/Client/SeasonalEvents/Easter/EasterEvilBunny/EvilBunnyOccurrences/BunnyAmbush/bunnyAmbushOutcome');
+const INITIAL_MOCK_DATA = require('../bunnyOutcomeMockData.json');
 const {
-  PARTICIPANT_DEATH_MESSAGES,
-  PARTICIPANT_ESCAPE_MESSAGES,
-} = require('../../../../../../src/Events/Client/SeasonalEvents/Easter/EasterEvilBunny/EvilBunnyOccurrences/easterEvilBunnyOccurrencesConstants');
-
-const INITIAL_MOCK_DATA = require('./bunnyAmbushOutcomeMockData.json');
+  sendEventOutcomeMessage,
+} = require('../../../../../../src/Events/Client/SeasonalEvents/Easter/EasterEvilBunny/easterEvilBunnyHuntUtils');
 let CLONED_MOCK_DATA = {};
 
 describe('bunnyAmbushOutcome', () => {
@@ -64,60 +62,6 @@ describe('bunnyAmbushOutcome', () => {
     });
   });
 
-  describe('handleParticipantDeath', () => {
-    const MOCK_MESSAGES = _.cloneDeep(PARTICIPANT_DEATH_MESSAGES);
-    test('should handle participant death by marking them as not alive, returning a death message with their name and adding selected message to usedMessages', () => {
-      const data = {
-        occurrenceDescription: 'Initial description ',
-        updatedEventData: CLONED_MOCK_DATA.MOCK_UPDATED_EVENT_DATA,
-        usedMessages: [MOCK_MESSAGES[0]],
-        userId: CLONED_MOCK_DATA.MOCK_PARTICIPANTS[0].userId,
-        username: CLONED_MOCK_DATA.MOCK_PARTICIPANTS[0].username,
-      };
-
-      jest.spyOn(global.Math, 'random').mockReturnValue(0);
-      const result = bunnyAmbushOutcome.handleParticipantDeath(data);
-      expect(result.occurrenceDescription).toEqual(
-        `Initial description With a sickening crunch, the bunny's teeth sink into MockUser1Username's shoulder, tearing through flesh and muscle with terrifying ease. MockUser1Username lies in pieces on the ground\n\u200b\n`
-      );
-      expect(result.usedMessages).toEqual([MOCK_MESSAGES[0], MOCK_MESSAGES[1]]);
-
-      const participantIndex = data.updatedEventData.participants.findIndex(
-        (participant) => participant.userId === data.userId
-      );
-      expect(data.updatedEventData.participants[participantIndex].isAlive).toBe(
-        false
-      );
-    });
-  });
-
-  describe('handleParticipantEscape', () => {
-    const MOCK_MESSAGES = _.cloneDeep(PARTICIPANT_ESCAPE_MESSAGES);
-    test('should handle participant escape by returning an escape message with their name and adding selected message to usedMessages', () => {
-      const data = {
-        occurrenceDescription: 'Initial description ',
-        updatedEventData: CLONED_MOCK_DATA.MOCK_UPDATED_EVENT_DATA,
-        usedMessages: [MOCK_MESSAGES[0]],
-        userId: CLONED_MOCK_DATA.MOCK_PARTICIPANTS[0].userId,
-        username: CLONED_MOCK_DATA.MOCK_PARTICIPANTS[0].username,
-      };
-
-      jest.spyOn(global.Math, 'random').mockReturnValue(0);
-      const result = bunnyAmbushOutcome.handleParticipantEscape(data);
-      expect(result.occurrenceDescription).toEqual(
-        `Initial description With a fierce determination, the evil Easter Bunny chased after MockUser1Username, but MockUser1Username managed to stay one step ahead and narrowly escaped its grasp!\n\u200b\n`
-      );
-      expect(result.usedMessages).toEqual([MOCK_MESSAGES[0], MOCK_MESSAGES[1]]);
-
-      const participantIndex = data.updatedEventData.participants.findIndex(
-        (participant) => participant.userId === data.userId
-      );
-      expect(data.updatedEventData.participants[participantIndex].isAlive).toBe(
-        true
-      );
-    });
-  });
-
   describe('handleEventOutcome', () => {
     test('should return message when all participants are killed', async () => {
       CLONED_MOCK_DATA.MOCK_UPDATED_EVENT_DATA.participants =
@@ -155,10 +99,11 @@ describe('bunnyAmbushOutcome', () => {
       const mockEmbeddedMessage = CLONED_MOCK_DATA.MOCK_EMBEDDED_MESSAGE;
       const mockActionTakenSpy = jest.spyOn(
         mockActionTaken.interaction,
+        // @ts-ignore
         'reply'
       );
 
-      bunnyAmbushOutcome.sendEventOutcomeMessage({
+      sendEventOutcomeMessage({
         actionTaken: mockActionTaken,
         eventChannel: mockEventChannel,
         embeddedMessage: mockEmbeddedMessage,
@@ -180,7 +125,7 @@ describe('bunnyAmbushOutcome', () => {
       const mockEmbeddedMessage = CLONED_MOCK_DATA.MOCK_EMBEDDED_MESSAGE;
       const eventChannelSendSpy = jest.spyOn(mockEventChannel, 'send');
 
-      bunnyAmbushOutcome.sendEventOutcomeMessage({
+      sendEventOutcomeMessage({
         actionTaken: mockActionTaken,
         eventChannel: mockEventChannel,
         embeddedMessage: mockEmbeddedMessage,

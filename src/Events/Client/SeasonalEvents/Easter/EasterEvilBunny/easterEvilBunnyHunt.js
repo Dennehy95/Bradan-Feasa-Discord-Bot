@@ -97,7 +97,6 @@ const handlePreEvent = async ({
     currentDate,
     updatedEventData.eventStartTime
   );
-  console.log('Pre-event: timeToEventStart = ' + timeToEventStart);
   if (timeToEventStart > 0) {
     await new Promise((resolve) =>
       setTimeout(resolve, timeToEventStart + 1000)
@@ -152,8 +151,6 @@ const handleInProgress = async ({
   client,
   server,
 }) => {
-  console.log('eventData.currentOccurrenceEndDate');
-  console.log(eventData.currentOccurrenceEndDate);
   if (eventData.currentOccurrenceEndDate) {
     const { callbackFunction, updatedEventData } =
       await handleCurrentOccurrenceEnd({
@@ -188,7 +185,11 @@ const handleInProgress = async ({
     availableOccurrences[
       Math.floor(Math.random() * availableOccurrences.length)
     ];
+  if (!randomOccurrence) {
+    console.info('No Occurrences available for this many living participants');
+  }
   eventData.currentOccurrence = DEFAULT_OCCURRENCES[randomOccurrence];
+  eventData.currentOccurrence.minimumSelectedParticipants;
   eventData.currentOccurrence.selectedParticipants = getSelectedParticipants({
     participants: eventData.participants,
     minimum: eventData.currentOccurrence.minimumSelectedParticipants,

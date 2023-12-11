@@ -94,7 +94,6 @@ module.exports = {
   async userInvolveEventButtonClicked(
     data = { interaction: null, isJoining: false, selectedEvent: null }
   ) {
-    console.log('here');
     const { interaction, isJoining, selectedEvent } = { ...data };
     const guild = interaction.guild;
     const guildId = guild.id;
