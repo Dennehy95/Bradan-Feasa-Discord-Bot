@@ -1,15 +1,11 @@
 const {
   getEasterHuntEventOutcomePage,
 } = require('../../../../../../../SeasonalEvents/EvilEasterBunny/Pages/getEasterHuntEventOutcomePage');
-const { rollD20 } = require('../../../../utils');
 const {
   allParticipantsKilled,
-  selectRandomMessage,
-  handleParticipantDeath,
-  handleParticipantEscape,
   sendEventOutcomeMessage,
 } = require('../../easterEvilBunnyHuntUtils');
-const { BUNNY_ATTACKS } = require('../easterEvilBunnyOccurrencesConstants');
+const { simulateAmbushEvent } = require('./bunnyAmbushActions');
 
 //TODO later this should just ping the event role, we create and delete the role as needed
 const generateInitialOccurrenceDescription = async function ({
@@ -23,44 +19,6 @@ const generateInitialOccurrenceDescription = async function ({
   return `${participantList} ${
     selectedParticipants.length > 1 ? 'are' : 'is'
   } caught in the ambush.\n\u200b\n`;
-};
-
-const simulateAmbushEvent = async function ({
-  difficultyModifier,
-  occurrenceDescription,
-  updatedEventData,
-}) {
-  let usedMessages = [];
-
-  for (const selectedParticipant of updatedEventData.currentOccurrence
-    .selectedParticipants) {
-    const { username, userId } = selectedParticipant;
-    const selectedRandomMessageData = selectRandomMessage({
-      messages: BUNNY_ATTACKS,
-      usedMessages,
-    });
-    const selectedAttack = selectedRandomMessageData.selectedMessage.replace(
-      /{USERNAME}/g,
-      username
-    );
-    occurrenceDescription += selectedAttack + '\n';
-    const diceRoll = rollD20(difficultyModifier);
-    const participantDataHandler =
-      diceRoll < 11 ? handleParticipantDeath : handleParticipantEscape;
-
-    ({ occurrenceDescription, updatedEventData, usedMessages } =
-      await participantDataHandler({
-        occurrenceDescription,
-        updatedEventData,
-        usedMessages,
-        userId,
-        username,
-      }));
-  }
-  return {
-    occurrenceDescription,
-    updatedEventData,
-  };
 };
 
 const handleEventOutcome = async function ({
@@ -82,7 +40,6 @@ const handleEventOutcome = async function ({
 module.exports = {
   generateInitialOccurrenceDescription,
   handleEventOutcome,
-  simulateAmbushEvent,
 
   async triggerBunnyAmbushOutcome({
     actionTaken = {
@@ -112,6 +69,7 @@ module.exports = {
       updatedEventData,
     }));
 
+    /* handleEventOutcome */
     ({ occurrenceDescription, updatedEventData } = await handleEventOutcome({
       occurrenceDescription,
       updatedEventData,

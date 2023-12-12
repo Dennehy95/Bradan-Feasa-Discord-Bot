@@ -18,9 +18,6 @@ const {
   generateMsWaitTimes,
 } = require('../../utils');
 const {
-  easterEvilBunnyHuntOccurrenceOutcomes,
-} = require('./EvilBunnyOccurrences/easterEvilBunnyHuntOccurrenceOutcomes');
-const {
   DEFAULT_OCCURRENCES,
 } = require('./EvilBunnyOccurrences/easterEvilBunnyOccurrencesConstants');
 const {

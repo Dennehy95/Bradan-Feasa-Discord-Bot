@@ -6,7 +6,7 @@ const {
   handleParticipantAttackMiss,
   handleParticipantAttackHits,
 } = require('../../easterEvilBunnyHuntUtils');
-const { simulateAmbushEvent } = require('../BunnyAmbush/bunnyAmbushOutcome');
+const { simulateAmbushEvent } = require('../BunnyAmbush/bunnyAmbushActions');
 const { BUNNY_ATTACKS } = require('../easterEvilBunnyOccurrencesConstants');
 
 const huntingPartyGoOnHunt = async function ({

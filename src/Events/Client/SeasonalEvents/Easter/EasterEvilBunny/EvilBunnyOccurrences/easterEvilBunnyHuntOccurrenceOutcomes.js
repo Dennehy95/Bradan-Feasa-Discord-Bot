@@ -1,5 +1,4 @@
 const Guild = require('../../../../../../Schemas/guild');
-const { dateDiffInMS } = require('../../../utils');
 const {
   triggerBunnyAmbushOutcome,
 } = require('./BunnyAmbush/bunnyAmbushOutcome');
@@ -12,9 +11,13 @@ const {
  *
  * Possible Events
  *
- * Ambush - Actions: [Protect [other person], Run Away], 2 Participants, First one to answer does it. Run away other dies, Protect 50/50 you die
+ * Ambush - Actions: [], 1-4 Participants, All attacked
  *
- * HuntingParty - Actions: [Go on a Hunt, Hide], 2-4 Possible Participants
+ * TODO Protective Ambush - Actions: [Protect [other person], Run Away], 2 Participants, First one to answer does it. Run away other dies, Protect 50/50 you die
+ *
+ * HuntingParty - Actions: [Go on a Hunt, Hide, Tricker Other Hunters], 2-4 Possible Participants
+ *
+ * TODO InterruptedSleep - Actions: [Investigate, Ignore It, Sound The Alarm], 1 Participant
  *
  */
 module.exports = {
@@ -26,8 +29,14 @@ module.exports = {
       case 'ambush':
         updatedEventData = await triggerBunnyAmbushOutcome(eventOutcomeData);
         break;
+      case 'protectiveAmbush':
+        // updatedEventData = await triggerBunnyProtectiveAmbushOutcome(eventOutcomeData);
+        break;
       case 'huntingParty':
         updatedEventData = await triggerHuntingPartyOutcome(eventOutcomeData);
+        break;
+      case 'interruptedSleep':
+        // updatedEventData = await triggerInterruptedSleepOutcome(eventOutcomeData);
         break;
       default:
         console.info('No event name found');

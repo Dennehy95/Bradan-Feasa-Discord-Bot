@@ -73,6 +73,7 @@ module.exports = {
       });
       const { components, embeddedMessage } = await getEasterHuntOverviewPage({
         guildId,
+        interaction: null,
       });
       await eventChannel.send({
         components,
@@ -132,7 +133,7 @@ module.exports = {
           (participant) => participant.userId !== interaction.user.id
         );
       }
-      if (!updatedEventData.eventState === 'inProgress') {
+      if (updatedEventData.eventState !== 'inProgress') {
         const participantIndex = participants.findIndex(
           (participant) => participant.id === interaction.user.id
         );
@@ -152,6 +153,7 @@ module.exports = {
 
     const { components, embeddedMessage } = await getEasterHuntOverviewPage({
       guildId,
+      interaction: null,
     });
 
     return await interaction.update({

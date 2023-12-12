@@ -9,11 +9,11 @@ const { dateDiffInMS } = require('./utils');
 /**
  * The action should have - [Id of user who did action, the action name]. If empty, there was no response and we do default result
  *
- * Possible Events
+ * Possible Seasonal Event
  *
- * Ambush - Actions: [Protect [other person], Run Away], 2 Participants, First one to answer does it. Run away other dies, Protect 50/50 you die
+ * easterHuntAction - An events where participants fight to kill an evil Easter Bunny
  *
- * HuntingParty - Actions: [Go on a Hunt, Hide], 2-4 Possible Participants
+ * easterEggHuntAction - An events where participants collect random appearing eggs in the server
  *
  */
 module.exports = {

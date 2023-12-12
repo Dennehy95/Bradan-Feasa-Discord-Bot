@@ -16,6 +16,37 @@ const DEFAULT_EASTER_HUNT_HUNTING_OCCURRENCE_ACTIONS = [
   },
 ];
 
+const DEFAULT_EASTER_HUNT_INTERRUPTED_SLEEP_ACTIONS = [
+  {
+    id: 0,
+    label: 'Investigate',
+    name: 'investigate',
+  },
+  {
+    id: 1,
+    label: 'Back To Sleep',
+    name: 'backToSleep',
+  },
+  {
+    id: 2,
+    label: 'Sound The Alarm!',
+    name: 'soundTheAlarm',
+  },
+];
+
+const DEFAULT_EASTER_HUNT_PROTECTIVE_AMBUSH_ACTIONS = [
+  {
+    id: 0,
+    label: 'Run Away!',
+    name: 'goOnHunt',
+  },
+  {
+    id: 1,
+    label: 'Protect',
+    name: 'hide',
+  },
+];
+
 module.exports = {
   BUNNY_ATTACKS: [
     `With lightning speed, the bunny hopped towards {USERNAME}, razor-sharp eggs flying in all directions.`,
@@ -36,22 +67,41 @@ module.exports = {
   ],
   DEFAULT_OCCURRENCES: {
     ambush: {
-      occurrenceName: 'ambush',
       minimumSelectedParticipants: 1,
       maximumSelectedParticipants: 4,
       messageDescription:
         'Suddenly the Bunny bursts from the bushes and begins attacking some unsuspecting victims!\n',
       messageTitle: "Bradán Feasa - Easter 'Evil Bunny' - Ambush!",
+      occurrenceName: 'ambush',
       selectedParticipants: [],
     },
     huntingParty: {
       actions: DEFAULT_EASTER_HUNT_HUNTING_OCCURRENCE_ACTIONS,
-      occurrenceName: 'huntingParty',
       minimumSelectedParticipants: 2,
       maximumSelectedParticipants: 4,
       messageDescription:
         'The King has chosen you to lead a hunt for the Evil Bunny. What will you do?\n',
       messageTitle: "Bradán Feasa - Easter 'Evil Bunny' - Time to Hunt!",
+      occurrenceName: 'huntingParty',
+      selectedParticipants: [],
+    },
+    interruptedSleep: {
+      actions: DEFAULT_EASTER_HUNT_INTERRUPTED_SLEEP_ACTIONS,
+      minimumSelectedParticipants: 1,
+      maximumSelectedParticipants: 1,
+      messageDescription: '',
+      messageTitle: "Bradán Feasa - Easter 'Evil Bunny' - Awoken",
+      occurrenceName: 'interruptedSleep',
+      selectedParticipants: [],
+    },
+    protectiveAmbush: {
+      actions: DEFAULT_EASTER_HUNT_PROTECTIVE_AMBUSH_ACTIONS,
+      minimumSelectedParticipants: 2,
+      maximumSelectedParticipants: 2,
+      messageDescription:
+        "The Bunny was stalking two of it's prey...Suddenly it leaps out to attack!\n",
+      messageTitle: "Bradán Feasa - Easter 'Evil Bunny' - Protective Ambush!",
+      occurrenceName: 'protectiveAmbush',
       selectedParticipants: [],
     },
   },

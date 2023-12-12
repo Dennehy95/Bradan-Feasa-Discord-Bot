@@ -20,9 +20,6 @@ const {
   userInvolveEventButtonClicked,
 } = require('../../SeasonalEvents/SeasonalEventsButtonClicks/seasonalEventButtonClicks');
 const {
-  easterEvilBunnyHuntOccurrenceOutcomes,
-} = require('./SeasonalEvents/Easter/EasterEvilBunny/EvilBunnyOccurrences/easterEvilBunnyHuntOccurrenceOutcomes');
-const {
   seasonalEventOccurrenceOutcomes,
 } = require('./SeasonalEvents/seasonalEventOccurrenceOutcomes');
 
@@ -98,7 +95,6 @@ const buttonClickedEvent = async (interaction) => {
       const occurrenceIndex = parseInt(interaction.customId.split('_')[1]);
       const actionId = parseInt(interaction.customId.split('_')[2]);
       return await seasonalEventOccurrenceOutcomes({
-        // return await easterEvilBunnyHuntOccurrenceOutcomes({
         buttonClickInfo: {
           actionId,
           messageCreatedTimestamp: interaction.message.createdTimestamp,
