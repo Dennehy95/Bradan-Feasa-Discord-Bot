@@ -24,6 +24,7 @@ const simulateAmbushEvent = async function ({
       /{USERNAME}/g,
       username
     );
+    occurrenceDescription += '```';
     occurrenceDescription += selectedAttack + '\n';
     const diceRoll = rollD20(difficultyModifier);
     const participantDataHandler =
@@ -37,6 +38,7 @@ const simulateAmbushEvent = async function ({
         userId,
         username,
       }));
+    occurrenceDescription += '```\n';
   }
   return {
     occurrenceDescription,

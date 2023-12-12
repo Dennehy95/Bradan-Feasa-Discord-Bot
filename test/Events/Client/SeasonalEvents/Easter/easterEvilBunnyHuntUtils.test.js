@@ -32,7 +32,7 @@ describe('easterEvilBunnyHuntUtils', () => {
       jest.spyOn(global.Math, 'random').mockReturnValue(0);
       const result = handleParticipantDeath(data);
       expect(result.occurrenceDescription).toEqual(
-        `Initial description With a sickening crunch, the bunny's teeth sink into MockUser1Username's shoulder, tearing through flesh and muscle with terrifying ease. MockUser1Username lies in pieces on the ground\n\u200b\n`
+        `Initial description With a sickening crunch, the bunny's teeth sink into MockUser1Username's shoulder, tearing through flesh and muscle with terrifying ease. MockUser1Username lies in pieces on the ground`
       );
       expect(result.usedMessages).toEqual([MOCK_MESSAGES[0], MOCK_MESSAGES[1]]);
 
@@ -59,7 +59,7 @@ describe('easterEvilBunnyHuntUtils', () => {
       jest.spyOn(global.Math, 'random').mockReturnValue(0);
       const result = handleParticipantEscape(data);
       expect(result.occurrenceDescription).toEqual(
-        `Initial description With a fierce determination, the evil Easter Bunny chased after MockUser1Username, but MockUser1Username managed to stay one step ahead and narrowly escaped its grasp!\n\u200b\n`
+        `Initial description With a fierce determination, the evil Easter Bunny chased after MockUser1Username, but MockUser1Username managed to stay one step ahead and narrowly escaped its grasp!`
       );
       expect(result.usedMessages).toEqual([MOCK_MESSAGES[0], MOCK_MESSAGES[1]]);
 

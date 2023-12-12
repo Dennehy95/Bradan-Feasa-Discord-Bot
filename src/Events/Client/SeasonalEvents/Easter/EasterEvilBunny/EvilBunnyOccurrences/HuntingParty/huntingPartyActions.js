@@ -38,7 +38,7 @@ const huntingPartyGoOnHunt = async function ({
     case initialRoll >= 5 && initialRoll < 15:
       // Do not found
       occurrenceDescription +=
-        'They searched for hours but could not find the Bunny. They give up and go back to the town for the night.\n';
+        '```They searched for hours but could not find the Bunny. They give up and go back to the town for the night.```\n';
       break;
     case initialRoll >= 15:
       // Do found bunny
@@ -48,6 +48,7 @@ const huntingPartyGoOnHunt = async function ({
       for (const selectedParticipant of updatedEventData.currentOccurrence
         .selectedParticipants) {
         const { username, userId } = selectedParticipant;
+        occurrenceDescription += '```';
 
         const attackRoll = rollD20(difficultyModifier);
         switch (true) {
@@ -106,6 +107,7 @@ const huntingPartyGoOnHunt = async function ({
               'Dice roll error: huntingPartyGoOnHunt -> Bunny found'
             );
         }
+        occurrenceDescription += '```\n';
       }
       break;
     default:
@@ -151,7 +153,7 @@ const huntingPartyHide = async function ({
   switch (true) {
     case initialRoll < 2:
       occurrenceDescription +=
-        'However, they were spotted by the Kings guards! They decided that XX would be sent out alone as punishment. The rest are led out onto the hunt\n\u200b\n';
+        '```However, they were spotted by the Kings guards! They decided that XX would be sent out alone as punishment. The rest are led out onto the hunt```\n';
 
       //TODO
       // Kill on selected participant and remove them from the selected participants
@@ -167,7 +169,7 @@ const huntingPartyHide = async function ({
 
     case initialRoll >= 2 && initialRoll < 10:
       occurrenceDescription +=
-        'However, they were spotted by the town watch while trying to hide. They are forced to go out on the hunt.\n\u200b\n';
+        '```However, they were spotted by the town watch while trying to hide. They are forced to go out on the hunt.```\n';
 
       //TODO
       // Kill on selected participant and remove them from the selected participants
@@ -183,14 +185,14 @@ const huntingPartyHide = async function ({
 
     case initialRoll >= 10 && initialRoll < 19:
       occurrenceDescription +=
-        'They manage to evade the town watch and avoid going out on the hunt.\n\u200b\n';
+        '```They manage to evade the town watch and avoid going out on the hunt.```\n';
       break;
 
     case initialRoll >= 19:
       //TODOdomWeapon someone had stashed away
       // Select someone and store the weapon on them giving them a +1 to attack rolls
       occurrenceDescription +=
-        'They manage to evade the town watch and avoid going out on the hunt. While hiding, XX found a TODOgetRandomWeapon someone had stashed away.\n\u200b\n';
+        '```They manage to evade the town watch and avoid going out on the hunt. While hiding, XX found a TODOgetRandomWeapon someone had stashed away.```\n';
       break;
   }
 
@@ -214,7 +216,7 @@ const huntingPartyTrickOtherHunters = async function ({
   switch (true) {
     case initialRoll < 2:
       occurrenceDescription +=
-        'However, XXX was caught trying to trick the others. They were beaten up and sent out of the hunt alone.\n\u200b\n';
+        '```However, XXX was caught trying to trick the others. They were beaten up and sent out of the hunt alone.```\n';
       // TODO -1 debuff to Selected participant, make them the only selected participant
 
       //TODO
@@ -231,7 +233,7 @@ const huntingPartyTrickOtherHunters = async function ({
 
     case initialRoll >= 2 && initialRoll < 10:
       occurrenceDescription +=
-        'However, XX was not convincing enough and had to join the hunt with the others.\n\u200b\n';
+        '```However, XX was not convincing enough and had to join the hunt with the others.```\n';
       ({ occurrenceDescription, occurrenceTitle, updatedEventData } =
         await huntingPartyGoOnHunt({
           difficultyModifier,
@@ -243,7 +245,7 @@ const huntingPartyTrickOtherHunters = async function ({
 
     case initialRoll >= 10:
       occurrenceDescription +=
-        'XX managed to fool the others and avoids having to go out on the hunt!\n\u200b\n';
+        '```XX managed to fool the others and avoids having to go out on the hunt!```\n';
       // TODO remove instigator from selected participants
       ({ occurrenceDescription, occurrenceTitle, updatedEventData } =
         await huntingPartyGoOnHunt({

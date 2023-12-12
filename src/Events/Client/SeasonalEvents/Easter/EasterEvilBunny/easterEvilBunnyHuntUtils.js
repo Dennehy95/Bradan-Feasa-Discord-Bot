@@ -34,8 +34,7 @@ const handleParticipantAttackHits = function ({
   return {
     bunnyDefeated,
     bunnyHurt,
-    occurrenceDescription: (occurrenceDescription +=
-      selectedDeathMessage + '\n\u200b\n'),
+    occurrenceDescription: (occurrenceDescription += selectedDeathMessage),
     updatedEventData,
     usedMessages: updatedUsedMessages,
   };
@@ -55,7 +54,7 @@ const handleParticipantAttackMiss = function ({
     selectedRandomMessageData.selectedMessage.replace(/{USERNAME}/g, username);
   return {
     occurrenceDescription: (occurrenceDescription +=
-      selectedAttackMissedMessage + '\n\u200b\n'),
+      selectedAttackMissedMessage),
     updatedEventData,
     usedMessages,
   };
@@ -81,8 +80,7 @@ const handleParticipantDeath = function ({
     selectedRandomMessageData.selectedMessage.replace(/{USERNAME}/g, username);
   updatedUsedMessages = selectedRandomMessageData.usedMessages;
   return {
-    occurrenceDescription: (occurrenceDescription +=
-      selectedDeathMessage + '\n\u200b\n'),
+    occurrenceDescription: (occurrenceDescription += selectedDeathMessage),
     updatedEventData,
     usedMessages: updatedUsedMessages,
   };
@@ -101,8 +99,7 @@ const handleParticipantEscape = function ({
   const selectedEscapeMessage =
     selectedRandomMessageData.selectedMessage.replace(/{USERNAME}/g, username);
   return {
-    occurrenceDescription: (occurrenceDescription +=
-      selectedEscapeMessage + '\n\u200b\n'),
+    occurrenceDescription: (occurrenceDescription += selectedEscapeMessage),
     updatedEventData,
     usedMessages,
   };

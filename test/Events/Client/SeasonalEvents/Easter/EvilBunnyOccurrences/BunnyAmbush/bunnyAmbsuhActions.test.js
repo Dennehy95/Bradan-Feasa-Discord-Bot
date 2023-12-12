@@ -29,7 +29,7 @@ describe('bunnyAmbushActions', () => {
 
       expect(result).toEqual({
         updatedEventData: CLONED_MOCK_DATA.MOCK_UPDATED_EVENT_DATA,
-        occurrenceDescription: `Initial description With lightning speed, the bunny hopped towards MockUser1Username, razor-sharp eggs flying in all directions.\nMockUser1Username stumbles backwards as the bunny's massive paw connects with their chest, knocking them to the ground and leaving them gasping for air. A final swipe and MockUser1Username is no more\n\u200b\nThe bunny hops towards MockUser2Username, its beady eyes glowing with malevolence as it strikes with its sharp claws!\nAs the evil Easter Bunny closed in, MockUser2Username scrambled up a nearby tree and managed to get out of reach just in the nick of time!\n\u200b\n`,
+        occurrenceDescription: `Initial description \`\`\`With lightning speed, the bunny hopped towards MockUser1Username, razor-sharp eggs flying in all directions.\nMockUser1Username stumbles backwards as the bunny's massive paw connects with their chest, knocking them to the ground and leaving them gasping for air. A final swipe and MockUser1Username is no more\`\`\`\n\`\`\`The bunny hops towards MockUser2Username, its beady eyes glowing with malevolence as it strikes with its sharp claws!\nAs the evil Easter Bunny closed in, MockUser2Username scrambled up a nearby tree and managed to get out of reach just in the nick of time!\`\`\`\n`,
       });
       // @ts-ignore
       global.Math.random.mockRestore();
